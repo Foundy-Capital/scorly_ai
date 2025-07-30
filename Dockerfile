@@ -11,5 +11,3 @@ RUN npm install
 COPY . .
 
 RUN npm run build
-
-CMD [ "pm2-runtime", "npm", "--", "start" ]
