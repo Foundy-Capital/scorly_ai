@@ -1,0 +1,16 @@
+version: "3.9"
+
+name: scorlyai-front
+
+services:
+  nextjs:
+    build: .
+  web:
+    container_name: scorlyai-web
+    build: ./nginx
+    command: /bin/sh -c \
+      "echo '[+] Run nginx server' && \
+      nginx -g 'daemon off;'"
+    ports:
+      - ${APP_PORT_EXPOSE}:80
+    restart: unless-stopped
