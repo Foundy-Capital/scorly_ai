@@ -103,7 +103,7 @@ export function AnalysisPanel({ messages, analysisData, isVisible, onSendMessage
                 {/* Asset Details */}
                 <div>
                   <h4 className="text-md font-semibold mb-2 border-b pb-2">Asset Details</h4>
-                  <div className="grid grid-cols-2 gap-2 text-sm">
+                  <div className="grid grid-wrap grid-cols-2 gap-2 text-sm">
                     <p><strong>Asset:</strong> {analysisData.asset_name}</p>
                     <p><strong>Token:</strong> {analysisData.token}</p>
                     <p><strong>Type:</strong> {analysisData.asset_type}</p>
@@ -115,10 +115,17 @@ export function AnalysisPanel({ messages, analysisData, isVisible, onSendMessage
                 {/* Index Inclusion Score */}
                 <div>
                   <h4 className="text-md font-semibold mb-2 border-b pb-2">Index Inclusion Score</h4>
-                  <div className="flex items-center gap-4">
-                    <div>
-                      <p className="font-semibold text-lg">{analysisData.index_inclusion_score.eligibility} | Score: {analysisData.index_inclusion_score.score_percent}</p>
-                    </div>
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                    <p className="font-semibold text-lg">{analysisData.index_inclusion_score.eligibility}</p>
+                    <p className={`font-semibold text-lg ${
+                      analysisData.index_inclusion_score.score_percent > 80
+                        ? 'text-green-500'
+                        : analysisData.index_inclusion_score.score_percent > 50
+                        ? 'text-yellow-500'
+                        : 'text-red-500'
+                    }`}>
+                      Score: {analysisData.index_inclusion_score.score_percent}
+                    </p>
                   </div>
                 </div>
 
