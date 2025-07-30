@@ -46,6 +46,7 @@ export default function Home() {
   const handleInitialAnalysis = async (url: string, isFullAudit: boolean) => {
     if (!url.trim()) return;
     setIsLoading(true);
+    setAnalysisData(null);
 
     try {
       const response = await fetch('/api/chat', {
@@ -96,19 +97,15 @@ export default function Home() {
   return (
     <main className="flex-grow">
       <HeroSection />
-        {!showAnalysisPanel ? (
-            <SubmissionModule
-                onGenerateReport={handleInitialAnalysis}
-                isLoading={isLoading}
-            />
-        ) : (
-          <AnalysisPanel
-            isVisible={showAnalysisPanel}
-            messages={messages}
-            analysisData={analysisData}
-            onSendMessage={handleSendMessage}
-          />
-        )}
+      <SubmissionModule
+        onGenerateReport={handleInitialAnalysis}
+        isLoading={isLoading}
+      />
+      <AnalysisPanel
+        messages={messages}
+        analysisData={analysisData}
+        onSendMessage={handleSendMessage}
+      />
       </main>
   );
 }
