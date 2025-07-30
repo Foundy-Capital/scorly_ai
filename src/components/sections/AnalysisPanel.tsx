@@ -148,9 +148,9 @@ export function AnalysisPanel({ messages, analysisData, onSendMessage }: Analysi
           <Button variant="secondary">
             📦 Export JSON for API
           </Button>
-          <Button variant="outline">
+          {/* <Button variant="outline">
             🔗 Copy Public Report Link
-          </Button>
+          </Button> */}
         </div>
       </Container>
     </Section>

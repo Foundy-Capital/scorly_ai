@@ -15,7 +15,7 @@ export function HeroSection() {
             Score Any Tokenized Real-World Asset in Seconds
           </h2>
           <p className="mt-6 text-lg leading-8 text-neutral-600 dark:text-neutral-300">
-            Upload project data or paste a link. Get a full audit-style score and risk report powered by AI.
+            Upload project data or paste a link.<br />Get a&nbsp;full audit-style score and&nbsp;risk report powered by&nbsp;AI.
           </p>
         </div>
       </Container>
