@@ -28,38 +28,18 @@ function Tab({ id, label, isActive, onClick }: TabProps) {
 }
 
 interface SubmissionModuleProps {
-  onGenerateReport: (data: { messages: any[]; score: any }) => void;
+  onGenerateReport: (url: string, isFullAudit: boolean) => void;
+  isLoading: boolean;
 }
 
-export function SubmissionModule({ onGenerateReport }: SubmissionModuleProps) {
-  const [activeTab, setActiveTab] = useState<'upload' | 'url'>('upload');
+export function SubmissionModule({ onGenerateReport, isLoading }: SubmissionModuleProps) {
+  const [activeTab, setActiveTab] = useState<'upload' | 'url'>('url');
   const [isFullAudit, setIsFullAudit] = useState(false);
   const [urlInput, setUrlInput] = useState('');
 
-  const handleGenerateScoreReport = async () => {
-    if (activeTab === 'url' && urlInput.trim()) {
-      try {
-        const response = await fetch('/api/chat', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ url: urlInput, isFullAudit }),
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        onGenerateReport(data);
-      } catch (error) {
-        console.error('Error generating score report:', error);
-        // Optionally, handle error state or display a message to the user
-      }
-    } else if (activeTab === 'upload') {
-      // Handle file upload logic here
-      console.log('File upload not yet implemented.');
+  const handleGenerateClick = () => {
+    if (activeTab === 'url') {
+      onGenerateReport(urlInput, isFullAudit);
     }
   };
 
@@ -70,31 +50,22 @@ export function SubmissionModule({ onGenerateReport }: SubmissionModuleProps) {
           <div className="border-b border-neutral-200 dark:border-neutral-800">
             <div className="flex space-x-8">
               <Tab
-                id="upload-tab"
-                label="Upload JSON/CSV"
-                isActive={activeTab === 'upload'}
-                onClick={() => setActiveTab('upload')}
-              />
-              <Tab
                 id="url-tab"
                 label="Paste URL"
                 isActive={activeTab === 'url'}
                 onClick={() => setActiveTab('url')}
               />
+              <Tab
+                id="upload-tab"
+                label="Upload JSON/CSV"
+                isActive={activeTab === 'upload'}
+                onClick={() => setActiveTab('upload')}
+              />
             </div>
           </div>
 
           <div className="mt-6">
-            {activeTab === 'upload' ? (
-              <div className="border-2 border-dashed border-neutral-300 dark:border-neutral-700 rounded-lg p-12 text-center">
-                <div className="space-y-1">
-                  <p className="text-neutral-500 dark:text-neutral-400">
-                    Drag and drop your file here, or
-                  </p>
-                  <Button variant="secondary">Browse files</Button>
-                </div>
-              </div>
-            ) : (
+            {activeTab === 'url' ? (
               <div className="space-y-4">
                 <input
                   type="url"
@@ -102,7 +73,17 @@ export function SubmissionModule({ onGenerateReport }: SubmissionModuleProps) {
                   className="w-full px-4 py-2 rounded-md border border-neutral-300 dark:border-neutral-700 bg-transparent"
                   value={urlInput}
                   onChange={(e) => setUrlInput(e.target.value)}
+                  disabled={isLoading}
                 />
+              </div>
+            ) : (
+              <div className="border-2 border-dashed border-neutral-300 dark:border-neutral-700 rounded-lg p-12 text-center">
+                <div className="space-y-1">
+                  <p className="text-neutral-500 dark:text-neutral-400">
+                    Drag and drop your file here, or
+                  </p>
+                  <Button variant="secondary" disabled={isLoading}>Browse files</Button>
+                </div>
               </div>
             )}
 
@@ -113,6 +94,7 @@ export function SubmissionModule({ onGenerateReport }: SubmissionModuleProps) {
                 checked={isFullAudit}
                 onChange={(e) => setIsFullAudit(e.target.checked)}
                 className="h-4 w-4 rounded border-neutral-300 dark:border-neutral-700"
+                disabled={isLoading}
               />
               <label
                 htmlFor="full-audit"
@@ -123,7 +105,9 @@ export function SubmissionModule({ onGenerateReport }: SubmissionModuleProps) {
             </div>
 
             <div className="mt-6">
-              <Button className="w-full" onClick={handleGenerateScoreReport}>Generate Score Report</Button>
+              <Button className="w-full" onClick={handleGenerateClick} disabled={isLoading}>
+                {isLoading ? 'Generating Report...' : 'Generate Score Report'}
+              </Button>
             </div>
           </div>
         </div>

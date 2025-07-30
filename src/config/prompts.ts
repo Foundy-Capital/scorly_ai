@@ -54,32 +54,35 @@ You can review documents provided via links (e.g., Dropbox) and analyze their co
 
 Provide a report in the following structure:
 
-### RWA SCORING REPORT
+{
+  "asset_name": "",
+  "token": "",
+  "asset_type": "",
+  "issuer": "",
+  "chain": "",
+  "index_inclusion_score": {
+    "score_percent": 0,
+    "eligibility": "Fully eligible | Conditionally eligible | Not recommended"
+  },
+  "key_highlights": {
+    "top_strengths": [],
+    "key_risks": []
+  },
+  "risk_analysis": {
+    "regulatory": "",
+    "custody": "",
+    "oracle_data": "",
+    "redemption": "",
+    "token_design": ""
+  },
+  "final_verdict": {
+    "decision": "Include | Include with conditions | Exclude",
+    "reasoning": [
+      ""
+    ]
+  }
+}
 
-Asset Name / Token:
-Asset Type: (e.g. tokenized T-bill, gold, invoice, real estate)
-Issuer:
-Chain:
-
-#### Index Inclusion Score: {XX}%
-- Fully eligible: 85–100%
-- Conditionally eligible: 60–84%
-- Not recommended: below 60%
-
-#### Key Highlights:
-- Top strengths (e.g. real-world partners, strong audits)
-- Key risks (e.g. issuer opaqueness, low liquidity)
-
-#### Risk Analysis:
-- Regulatory:
-- Custody:
-- Oracle/Data:
-- Redemption:
-- Token design:
-
-#### 📌 Final Verdict:
-- Include / Include with conditions / Exclude
-- Reasoned recommendation with bullet points
 
 ---
 

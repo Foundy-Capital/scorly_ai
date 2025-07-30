@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
 
       let messages: ChatCompletionMessageParam[] = [
         { role: 'system', content: SYSTEM_PROMPT},
-        { role: 'user', content: `Please analyze the project at this URL: ${url}. Is a full audit requested: ${isFullAudit ? 'Yes' : 'No'}.` },
+        { role: 'user', content: `Please analyze the project at this URL: ${url}. Is a full audit requested: ${isFullAudit ? 'Yes' : 'No'}. Respond only in JSON. Do not include any explanation: {...}` },
       ];
 
       let response = await openai.chat.completions.create({
@@ -131,28 +131,27 @@ export async function POST(req: NextRequest) {
         responseMessage = secondResponse.choices[0].message;
       }
 
-      const aiContent = responseMessage.content || '';
+      const aiContent = JSON.parse(responseMessage.content) || '';
 
-      // Extract chat message and score breakdown from AI's response
+      // Extract chat message and analysis data from AI's response
       let chatMessageContent = aiContent;
-      let scoreBreakdown = null;
+      let analysisData = null;
+      // console.log('chatMessageContent :>> ', chatMessageContent);
+      // console.log('chatMessageContent.index_inclusion_score.score_percent :>> ', chatMessageContent.index_inclusion_score.score_percent);
 
-      const scoreJsonMatch = aiContent.match(/<SCORE_JSON>(.*?)<\/SCORE_JSON>/s);
-      if (scoreJsonMatch && scoreJsonMatch[1]) {
-        try {
-          scoreBreakdown = JSON.parse(scoreJsonMatch[1]);
-          // Remove the JSON part from the chat message content
-          chatMessageContent = aiContent.replace(scoreJsonMatch[0], '').trim();
-        } catch (e) {
-          console.error("Failed to parse score JSON from AI response:", e);
-        }
+      const scoreJsonMatch = chatMessageContent.index_inclusion_score.score_percent;
+      // console.log('scoreJsonMatch :>> ', scoreJsonMatch);
+      if (scoreJsonMatch > 0) {
+        analysisData = chatMessageContent
       }
 
-      const initialMessages = [{ role: 'assistant', content: chatMessageContent }];
+      const initialMessages = [{ role: 'assistant', content: JSON.stringify(chatMessageContent) }];
+      // console.dir('responseMessage :>> ', initialMessages);
+      // console.log('analysisData :>> ', analysisData);
 
       return NextResponse.json({
         messages: initialMessages,
-        score: scoreBreakdown,
+        analysis: analysisData,
       });
     }
 
@@ -165,7 +164,7 @@ export async function POST(req: NextRequest) {
       ];
 
       let response = await openai.chat.completions.create({
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-4-turbo-preview',
         messages: initialMessages,
         tools: tools,
         tool_choice: 'auto',
@@ -205,7 +204,8 @@ export async function POST(req: NextRequest) {
 
         responseMessage = secondResponse.choices[0].message;
       }
-
+      
+      console.log('responseMessage :>> ', responseMessage);
       return NextResponse.json({ message: responseMessage.content });
     }
 
