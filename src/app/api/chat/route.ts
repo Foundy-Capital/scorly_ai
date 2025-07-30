@@ -11,23 +11,23 @@ const openai = new OpenAI({
 });
 
 const tools = [
-  {
-    type: 'function' as const,
-    function: {
-      name: 'analyzeDocument',
-      description: 'Analyze a document from a provided link (e.g., Dropbox).',
-      parameters: {
-        type: 'object' as const,
-        properties: {
-          url: {
-            type: 'string' as const,
-            description: 'The URL of the document to analyze.',
-          },
-        },
-        required: ['url'],
-      },
-    },
-  },
+  // {
+  //   type: 'function' as const,
+  //   function: {
+  //     name: 'analyzeDocument',
+  //     description: 'Analyze a document from a provided link (e.g., Dropbox).',
+  //     parameters: {
+  //       type: 'object' as const,
+  //       properties: {
+  //         url: {
+  //           type: 'string' as const,
+  //           description: 'The URL of the document to analyze.',
+  //         },
+  //       },
+  //       required: ['url'],
+  //     },
+  //   },
+  // },
   {
     type: 'function' as const,
     function: {
@@ -64,154 +64,107 @@ const tools = [
   },
 ];
 
+const availableFunctions: { [key: string]: Function } = {
+  postSearch,
+  webCrawler,
+  // analyzeDocument: async (url: string) => {
+  //   const doc = await fetchDocumentFromDropbox(url);
+  //   const content = extractTextContent(doc);
+  //   return content;
+  // },
+};
+
+async function runChatWithTools(messages: ChatCompletionMessageParam[]) {
+  const response = await openai.chat.completions.create({
+    model: 'gpt-3.5-turbo',
+    messages,
+    tools,
+    tool_choice: 'auto',
+  });
+
+  const responseMessage = response.choices[0].message;
+  const toolCalls = responseMessage.tool_calls;
+
+  console.log('AI Tool Calls:', toolCalls); // <-- ADDED FOR DEBUGGING
+
+  if (toolCalls) {
+    messages.push(responseMessage); // Add assistant's tool call message to history
+    const toolMessages: ChatCompletionMessageParam[] = [];
+
+    for (const toolCall of toolCalls) {
+      const functionName = toolCall.function.name;
+      const functionToCall = availableFunctions[functionName];
+      const functionArgs = JSON.parse(toolCall.function.arguments);
+      let functionResponse;
+
+      if (functionName === 'webCrawler') {
+        functionResponse = await functionToCall(functionArgs.url);
+      // } else if (functionName === 'analyzeDocument') {
+      //   functionResponse = await functionToCall(functionArgs.url);
+      } else if (functionName === 'postSearch') {
+        functionResponse = await functionToCall(functionArgs.query);
+      }
+
+      toolMessages.push({
+        tool_call_id: toolCall.id,
+        role: 'tool',
+        content: functionResponse,
+      });
+    }
+    messages.push(...toolMessages); // Add tool outputs to history
+
+    const secondResponse = await openai.chat.completions.create({
+      model: 'gpt-3.5-turbo',
+      messages,
+    });
+    return secondResponse.choices[0].message;
+  }
+
+  return responseMessage;
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    console.log('body :>> ', body);
+    const { url, isFullAudit, messages: userMessages } = body;
 
-    const availableFunctions: { [key: string]: Function } = {
-      postSearch,
-      webCrawler,
-      analyzeDocument: async (url: string) => {
-        const doc = await fetchDocumentFromDropbox(url);
-        const content = extractTextContent(doc);
-        return content;
-      },
-    };
+    let messages: ChatCompletionMessageParam[];
+    const isInitialAnalysis = !!url;
 
-    // --- Handle Initial Analysis Request ---
-    // if (body.url) {
-    const { url, isFullAudit } = body;
-
-    let messages: ChatCompletionMessageParam[] = [
-      { role: 'system', content: SYSTEM_PROMPT},
-      { role: 'user', content: `Please analyze the project at this URL: ${url}. Is a full audit requested: ${isFullAudit ? 'Yes' : 'No'}. Respond only in JSON. Do not include any explanation: {...}` },
-    ];
-
-    let response = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
-      messages: messages,
-      tools: tools,
-      tool_choice: 'auto',
-    });
-
-    let responseMessage = response.choices[0].message;
-    let toolCalls = responseMessage.tool_calls;
-
-    if (toolCalls) {
-      messages.push(responseMessage); // Add assistant's tool call message to history
-      const toolMessages: ChatCompletionMessageParam[] = [];
-
-      for (const toolCall of toolCalls) {
-        const functionName = toolCall.function.name;
-        const functionToCall = availableFunctions[functionName];
-        const functionArgs = JSON.parse(toolCall.function.arguments);
-        let functionResponse;
-
-        if (functionName === 'webCrawler') {
-          functionResponse = await functionToCall(functionArgs.url);
-        } else if (functionName === 'analyzeDocument') {
-          functionResponse = await functionToCall(functionArgs.url);
-        } else if (functionName === 'postSearch') {
-          functionResponse = await functionToCall(functionArgs.query);
-        }
-
-        toolMessages.push({
-          tool_call_id: toolCall.id,
-          role: 'tool',
-          content: functionResponse,
-        });
-      }
-      messages.push(...toolMessages); // Add tool outputs to history
-
-      const secondResponse = await openai.chat.completions.create({
-        model: 'gpt-3.5-turbo',
-        messages: messages, // Send the full conversation with tool outputs
-      });
-      responseMessage = secondResponse.choices[0].message;
+    if (isInitialAnalysis) {
+      messages = [
+        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'user', content: `Please analyze the project at this URL: ${url}. Is a full audit requested: ${isFullAudit ? 'Yes' : 'No'}. Respond only in JSON. Do not include any explanation: {...}` },
+      ];
+    } else if (userMessages) {
+      messages = [
+        { role: 'system', content: SYSTEM_PROMPT },
+        ...userMessages,
+      ];
+    } else {
+      return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
     }
 
-    const aiContent = JSON.parse(responseMessage.content) || '';
+    const finalResponseMessage = await runChatWithTools(messages);
+    const aiContent = JSON.parse(finalResponseMessage.content || '{}');
 
-    // Extract chat message and analysis data from AI's response
-    let chatMessageContent = aiContent;
     let analysisData = null;
-    // console.log('chatMessageContent :>> ', chatMessageContent);
-    // console.log('chatMessageContent.index_inclusion_score.score_percent :>> ', chatMessageContent.index_inclusion_score.score_percent);
-
-    const scoreJsonMatch = chatMessageContent.index_inclusion_score.score_percent;
-    // console.log('scoreJsonMatch :>> ', scoreJsonMatch);
-    if (scoreJsonMatch > 0) {
-      analysisData = chatMessageContent
+    if (aiContent.index_inclusion_score?.score_percent > 0) {
+      analysisData = aiContent;
     }
 
-    const initialMessages = [{ role: 'assistant', content: JSON.stringify(chatMessageContent) }];
-    // console.dir('responseMessage :>> ', initialMessages);
-    // console.log('analysisData :>> ', analysisData);
-
-    return NextResponse.json({
-      messages: initialMessages,
-      analysis: analysisData,
-    });
-    // }
-
-    // --- Handle Subsequent Chat Messages ---
-    // if (body.messages) {
-    //   const { messages } = body;
-    //   const initialMessages: ChatCompletionMessageParam[] = [
-    //     { role: 'system', content: SYSTEM_PROMPT },
-    //     ...messages,
-    //   ];
-
-    //   let response = await openai.chat.completions.create({
-    //     model: 'gpt-4-turbo-preview',
-    //     messages: initialMessages,
-    //     tools: tools,
-    //     tool_choice: 'auto',
-    //   });
-
-    //   let responseMessage = response.choices[0].message;
-    //   const toolCalls = responseMessage.tool_calls;
-
-    //   if (toolCalls) {
-    //     const toolMessages: ChatCompletionMessageParam[] = [];
-
-    //     for (const toolCall of toolCalls) {
-    //       const functionName = toolCall.function.name;
-    //       const functionToCall = availableFunctions[functionName];
-    //       const functionArgs = JSON.parse(toolCall.function.arguments);
-    //       let functionResponse;
-    //       if (functionName === 'webCrawler') {
-    //         functionResponse = await functionToCall(functionArgs.url);
-    //       } else if (functionName === 'analyzeDocument') {
-    //         functionResponse = await functionToCall(functionArgs.url);
-    //       } else if (functionName === 'postSearch') {
-    //         functionResponse = await functionToCall(functionArgs.query);
-    //       }
-
-
-    //       toolMessages.push({
-    //         tool_call_id: toolCall.id,
-    //         role: 'tool',
-    //         content: functionResponse,
-    //       });
-    //     }
-
-    //     const secondResponse = await openai.chat.completions.create({
-    //       model: 'gpt-3.5-turbo',
-    //       messages: [...initialMessages, responseMessage, ...toolMessages],
-    //     });
-
-    //     responseMessage = secondResponse.choices[0].message;
-    //   }
-
-    //   console.log('responseMessage :>> ', responseMessage);
-    //   return NextResponse.json({ message: responseMessage.content });
-    // }
-
-    // If neither url nor messages are present
-    return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
-
+    if (isInitialAnalysis) {
+      const initialMessages = [{ role: 'assistant', content: JSON.stringify(aiContent) }];
+      return NextResponse.json({
+        messages: initialMessages,
+        analysis: analysisData,
+      });
+    } else {
+      return NextResponse.json({
+        message: JSON.stringify(aiContent),
+        analysis: analysisData,
+      });
+    }
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: 'Something went wrong' }, { status: 500 });

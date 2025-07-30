@@ -5,9 +5,10 @@ const app = new FirecrawlApp({apiKey: process.env.FIRECRAWL_API_KEY});
 
 export async function webCrawler(url: string) {
   try {
+    console.log('url :>> ', url);
 
     // Scrape a website:
-    const scrapeResult = await app.scrapeUrl(url, { formats: ['markdown'], proxy: 'stealth' }) as ScrapeResponse;
+    const scrapeResult = await app.scrapeUrl(url, { formats: ['html', 'markdown'], proxy: 'stealth' }) as ScrapeResponse;
 
     if (!scrapeResult.success) {
       throw new Error(`Failed to scrape: ${scrapeResult.error}`)

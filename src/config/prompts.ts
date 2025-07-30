@@ -11,6 +11,7 @@ You can review documents provided via links (e.g., Dropbox) and analyze their co
 2. Extract relevant information about the RWA token/project
 3. Include findings in your overall assessment
 4. Note any missing or unclear information that requires further clarification
+5. Exctract if exists link to dropbox from [View All Documents], return it in "all_documents" field
 ---
 
 ## Evaluation Categories (Each Scored from 0–100%):
@@ -81,6 +82,7 @@ Provide a report in the following structure:
       ""
     ]
   }
+  "all_documents": ""
 }
 
 
