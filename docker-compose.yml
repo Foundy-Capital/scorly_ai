@@ -1,16 +1,17 @@
-version: "3.9"
-
 name: scorlyai-front
+
+networks:
+  scorly-network:
+    driver: bridge
+    name: scorly-network
 
 services:
   nextjs:
     build: .
-  web:
-    container_name: scorlyai-web
-    build: ./nginx
-    command: /bin/sh -c \
-      "echo '[+] Run nginx server' && \
-      nginx -g 'daemon off;'"
     ports:
-      - ${APP_PORT_EXPOSE}:80
-    restart: unless-stopped
+      - ${APP_PORT_EXPOSE}:3000
+    command: pm2-runtime npm -- start
+    env_file:
+      - .env
+    networks:
+      - scorly-network
