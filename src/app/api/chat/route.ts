@@ -4,12 +4,30 @@ import { ChatCompletionMessageParam } from 'openai/resources/index.mjs';
 import { SYSTEM_PROMPT } from '@/config/prompts';
 import { postSearch } from '@/tools/search';
 import { webCrawler } from '@/tools/crawler';
+import { fetchDocumentFromDropbox, extractTextContent } from '@/tools/document';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
 const tools = [
+  {
+    type: 'function' as const,
+    function: {
+      name: 'analyzeDocument',
+      description: 'Analyze a document from a provided link (e.g., Dropbox).',
+      parameters: {
+        type: 'object' as const,
+        properties: {
+          url: {
+            type: 'string' as const,
+            description: 'The URL of the document to analyze.',
+          },
+        },
+        required: ['url'],
+      },
+    },
+  },
   {
     type: 'function' as const,
     function: {
@@ -68,6 +86,11 @@ export async function POST(req: NextRequest) {
       const availableFunctions: { [key: string]: Function } = {
         postSearch,
         webCrawler,
+        analyzeDocument: async (url: string) => {
+          const doc = await fetchDocumentFromDropbox(url);
+          const content = extractTextContent(doc);
+          return content;
+        },
       };
       const toolMessages: ChatCompletionMessageParam[] = [];
 
@@ -79,6 +102,8 @@ export async function POST(req: NextRequest) {
         if (functionName === 'postSearch') {
           functionResponse = await functionToCall(functionArgs.query);
         } else if (functionName === 'webCrawler') {
+          functionResponse = await functionToCall(functionArgs.url);
+        } else if (functionName === 'analyzeDocument') {
           functionResponse = await functionToCall(functionArgs.url);
         }
 
