@@ -39,11 +39,10 @@ interface AssetAnalysis {
 interface AnalysisPanelProps {
   messages: ChatMessage[];
   analysisData: AssetAnalysis | null;
-  isVisible: boolean;
   onSendMessage: (input: string) => void;
 }
 
-export function AnalysisPanel({ messages, analysisData, isVisible, onSendMessage }: AnalysisPanelProps) {
+export function AnalysisPanel({ messages, analysisData, onSendMessage }: AnalysisPanelProps) {
   const [input, setInput] = useState('');
 
   const handleSendClick = () => {
@@ -51,52 +50,12 @@ export function AnalysisPanel({ messages, analysisData, isVisible, onSendMessage
     setInput('');
   };
 
-  if (!isVisible) return null;
-
   return (
     <Section className="bg-neutral-50 dark:bg-neutral-900">
       <Container>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Chat Panel */}
-          <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-lg p-6">
-            <h3 className="text-lg font-semibold mb-4">AI Analysis</h3>
-            <div className="h-[400px] overflow-y-auto border border-neutral-200 dark:border-neutral-700 rounded-lg p-4">
-              <div className="flex flex-col h-full">
-                <div className="flex-1 overflow-y-auto pr-2">
-                  {messages.map((msg, index) => (
-                    <div key={index} className={`my-2 ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
-                      <div
-                        className={`inline-block p-3 rounded-lg ${
-                          msg.role === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-200 dark:bg-gray-700'
-                        }`}
-                      >
-                        {msg.content}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-4 flex">
-                  <input
-                    type="text"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleSendClick()}
-                    className="flex-1 p-3 rounded-l-lg bg-gray-100 dark:bg-gray-800 border border-neutral-200 dark:border-neutral-700 focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Type your message..."
-                  />
-                  <button
-                    onClick={handleSendClick}
-                    className="p-3 bg-blue-600 text-white rounded-r-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600"
-                  >
-                    Send
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
+        <div className="flex justify-center">
           {/* Analysis Report */}
-          <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-lg p-6">
+          <div className="w-full lg:w-1/2 bg-white dark:bg-neutral-800 rounded-lg shadow-lg p-6">
             <h3 className="text-lg font-semibold mb-4">Analysis Report</h3>
             {analysisData ? (
               <div className="space-y-6">
