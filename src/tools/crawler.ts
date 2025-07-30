@@ -12,11 +12,8 @@ export async function webCrawler(url: string) {
     if (!scrapeResult.success) {
       throw new Error(`Failed to scrape: ${scrapeResult.error}`)
     }
-
-    console.log(scrapeResult.markdown)
-
+    // console.log(scrapeResult.markdown)
     return scrapeResult.markdown
-
   } catch (error) {
     console.error(`Error in webCrawler calling /api/crawl for ${url}:`, error);
     return JSON.stringify({

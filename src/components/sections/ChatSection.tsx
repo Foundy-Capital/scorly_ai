@@ -1,10 +1,18 @@
-
 'use client';
 
 import { useState } from 'react';
 
-export default function Chat() {
-  const [messages, setMessages] = useState<{ role: string; content: string }[]>([]);
+interface ChatMessage {
+  role: string;
+  content: string;
+}
+
+interface ChatSectionProps {
+  initialMessages: ChatMessage[];
+}
+
+export default function ChatSection({ initialMessages }: ChatSectionProps) {
+  const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [input, setInput] = useState('');
 
   const handleSend = async () => {

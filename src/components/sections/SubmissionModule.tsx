@@ -27,9 +27,41 @@ function Tab({ id, label, isActive, onClick }: TabProps) {
   );
 }
 
-export function SubmissionModule() {
+interface SubmissionModuleProps {
+  onGenerateReport: (data: { messages: any[]; score: any }) => void;
+}
+
+export function SubmissionModule({ onGenerateReport }: SubmissionModuleProps) {
   const [activeTab, setActiveTab] = useState<'upload' | 'url'>('upload');
   const [isFullAudit, setIsFullAudit] = useState(false);
+  const [urlInput, setUrlInput] = useState('');
+
+  const handleGenerateScoreReport = async () => {
+    if (activeTab === 'url' && urlInput.trim()) {
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ url: urlInput, isFullAudit }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        onGenerateReport(data);
+      } catch (error) {
+        console.error('Error generating score report:', error);
+        // Optionally, handle error state or display a message to the user
+      }
+    } else if (activeTab === 'upload') {
+      // Handle file upload logic here
+      console.log('File upload not yet implemented.');
+    }
+  };
 
   return (
     <Section>
@@ -68,6 +100,8 @@ export function SubmissionModule() {
                   type="url"
                   placeholder="Enter project URL, whitepaper, or GitHub repo"
                   className="w-full px-4 py-2 rounded-md border border-neutral-300 dark:border-neutral-700 bg-transparent"
+                  value={urlInput}
+                  onChange={(e) => setUrlInput(e.target.value)}
                 />
               </div>
             )}
@@ -89,7 +123,7 @@ export function SubmissionModule() {
             </div>
 
             <div className="mt-6">
-              <Button className="w-full">Generate Score Report</Button>
+              <Button className="w-full" onClick={handleGenerateScoreReport}>Generate Score Report</Button>
             </div>
           </div>
         </div>

@@ -14,3 +14,4 @@ export async function fetchFromApi(url: string, headers: any, params: any) {
     };
   }
 }
+

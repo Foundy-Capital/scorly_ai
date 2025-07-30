@@ -66,64 +66,152 @@ const tools = [
 
 export async function POST(req: NextRequest) {
   try {
-    const { messages } = await req.json();
-    const initialMessages: ChatCompletionMessageParam[] = [
-      { role: 'system', content: SYSTEM_PROMPT },
-      ...messages,
-    ];
+    const body = await req.json();
+    console.log('body :>> ', body);
 
-    let response = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
-      messages: initialMessages,
-      tools: tools,
-      tool_choice: 'auto',
-    });
+    const availableFunctions: { [key: string]: Function } = {
+      postSearch,
+      webCrawler,
+      analyzeDocument: async (url: string) => {
+        const doc = await fetchDocumentFromDropbox(url);
+        const content = extractTextContent(doc);
+        return content;
+      },
+    };
 
-    let responseMessage = response.choices[0].message;
-    const toolCalls = responseMessage.tool_calls;
+    // --- Handle Initial Analysis Request ---
+    if (body.url) {
+      const { url, isFullAudit } = body;
 
-    if (toolCalls) {
-      const availableFunctions: { [key: string]: Function } = {
-        postSearch,
-        webCrawler,
-        analyzeDocument: async (url: string) => {
-          const doc = await fetchDocumentFromDropbox(url);
-          const content = extractTextContent(doc);
-          return content;
-        },
-      };
-      const toolMessages: ChatCompletionMessageParam[] = [];
+      let messages: ChatCompletionMessageParam[] = [
+        { role: 'system', content: SYSTEM_PROMPT},
+        { role: 'user', content: `Please analyze the project at this URL: ${url}. Is a full audit requested: ${isFullAudit ? 'Yes' : 'No'}.` },
+      ];
 
-      for (const toolCall of toolCalls) {
-        const functionName = toolCall.function.name;
-        const functionToCall = availableFunctions[functionName];
-        const functionArgs = JSON.parse(toolCall.function.arguments);
-        let functionResponse;
-        if (functionName === 'postSearch') {
-          functionResponse = await functionToCall(functionArgs.query);
-        } else if (functionName === 'webCrawler') {
-          functionResponse = await functionToCall(functionArgs.url);
-        } else if (functionName === 'analyzeDocument') {
-          functionResponse = await functionToCall(functionArgs.url);
-        }
-
-
-        toolMessages.push({
-          tool_call_id: toolCall.id,
-          role: 'tool',
-          content: functionResponse,
-        });
-      }
-
-      const secondResponse = await openai.chat.completions.create({
+      let response = await openai.chat.completions.create({
         model: 'gpt-3.5-turbo',
-        messages: [...initialMessages, responseMessage, ...toolMessages],
+        messages: messages,
+        tools: tools,
+        tool_choice: 'auto',
       });
 
-      responseMessage = secondResponse.choices[0].message;
+      let responseMessage = response.choices[0].message;
+      let toolCalls = responseMessage.tool_calls;
+
+      if (toolCalls) {
+        messages.push(responseMessage); // Add assistant's tool call message to history
+        const toolMessages: ChatCompletionMessageParam[] = [];
+
+        for (const toolCall of toolCalls) {
+          const functionName = toolCall.function.name;
+          const functionToCall = availableFunctions[functionName];
+          const functionArgs = JSON.parse(toolCall.function.arguments);
+          let functionResponse;
+
+          if (functionName === 'webCrawler') {
+            functionResponse = await functionToCall(functionArgs.url);
+          } else if (functionName === 'analyzeDocument') {
+            functionResponse = await functionToCall(functionArgs.url);
+          } else if (functionName === 'postSearch') {
+            functionResponse = await functionToCall(functionArgs.query);
+          }
+
+          toolMessages.push({
+            tool_call_id: toolCall.id,
+            role: 'tool',
+            content: functionResponse,
+          });
+        }
+        messages.push(...toolMessages); // Add tool outputs to history
+
+        const secondResponse = await openai.chat.completions.create({
+          model: 'gpt-3.5-turbo',
+          messages: messages, // Send the full conversation with tool outputs
+        });
+        responseMessage = secondResponse.choices[0].message;
+      }
+
+      const aiContent = responseMessage.content || '';
+
+      // Extract chat message and score breakdown from AI's response
+      let chatMessageContent = aiContent;
+      let scoreBreakdown = null;
+
+      const scoreJsonMatch = aiContent.match(/<SCORE_JSON>(.*?)<\/SCORE_JSON>/s);
+      if (scoreJsonMatch && scoreJsonMatch[1]) {
+        try {
+          scoreBreakdown = JSON.parse(scoreJsonMatch[1]);
+          // Remove the JSON part from the chat message content
+          chatMessageContent = aiContent.replace(scoreJsonMatch[0], '').trim();
+        } catch (e) {
+          console.error("Failed to parse score JSON from AI response:", e);
+        }
+      }
+
+      const initialMessages = [{ role: 'assistant', content: chatMessageContent }];
+
+      return NextResponse.json({
+        messages: initialMessages,
+        score: scoreBreakdown,
+      });
     }
 
-    return NextResponse.json({ message: responseMessage.content });
+    // --- Handle Subsequent Chat Messages ---
+    if (body.messages) {
+      const { messages } = body;
+      const initialMessages: ChatCompletionMessageParam[] = [
+        { role: 'system', content: SYSTEM_PROMPT },
+        ...messages,
+      ];
+
+      let response = await openai.chat.completions.create({
+        model: 'gpt-3.5-turbo',
+        messages: initialMessages,
+        tools: tools,
+        tool_choice: 'auto',
+      });
+
+      let responseMessage = response.choices[0].message;
+      const toolCalls = responseMessage.tool_calls;
+
+      if (toolCalls) {
+        const toolMessages: ChatCompletionMessageParam[] = [];
+
+        for (const toolCall of toolCalls) {
+          const functionName = toolCall.function.name;
+          const functionToCall = availableFunctions[functionName];
+          const functionArgs = JSON.parse(toolCall.function.arguments);
+          let functionResponse;
+          if (functionName === 'webCrawler') {
+            functionResponse = await functionToCall(functionArgs.url);
+          } else if (functionName === 'analyzeDocument') {
+            functionResponse = await functionToCall(functionArgs.url);
+          } else if (functionName === 'postSearch') {
+            functionResponse = await functionToCall(functionArgs.query);
+          }
+
+
+          toolMessages.push({
+            tool_call_id: toolCall.id,
+            role: 'tool',
+            content: functionResponse,
+          });
+        }
+
+        const secondResponse = await openai.chat.completions.create({
+          model: 'gpt-3.5-turbo',
+          messages: [...initialMessages, responseMessage, ...toolMessages],
+        });
+
+        responseMessage = secondResponse.choices[0].message;
+      }
+
+      return NextResponse.json({ message: responseMessage.content });
+    }
+
+    // If neither url nor messages are present
+    return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: 'Something went wrong' }, { status: 500 });
