@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Section, Container } from '@/components/ui/Layout';
 import { Button } from '@/components/ui/Button';
+import { generatePdf } from '@/lib/pdfGenerator';
 
 interface ChatMessage {
   role: string;
@@ -45,10 +46,17 @@ interface AnalysisPanelProps {
 
 export function AnalysisPanel({ messages, analysisData, onSendMessage }: AnalysisPanelProps) {
   const [input, setInput] = useState('');
+  const analysisReportRef = useRef<HTMLDivElement>(null);
 
   const handleSendClick = () => {
     onSendMessage(input);
     setInput('');
+  };
+
+  const handleDownloadPdf = () => {
+    if (analysisReportRef.current) {
+      generatePdf(analysisReportRef.current, `RWA-Report-${analysisData?.asset_name || 'analysis'}.pdf`);
+    }
   };
 
   return (
@@ -56,7 +64,7 @@ export function AnalysisPanel({ messages, analysisData, onSendMessage }: Analysi
       <Container>
         <div className="flex justify-center">
           {/* Analysis Report */}
-          <div className="w-full lg:w-1/2 bg-white dark:bg-neutral-800 rounded-lg shadow-lg p-6">
+          <div ref={analysisReportRef} className="w-full lg:w-1/2 bg-white dark:bg-neutral-800 rounded-lg shadow-lg p-6">
             <h3 className="text-lg font-semibold mb-4">Analysis Report</h3>
             {analysisData ? (
               <div className="space-y-6">
@@ -153,7 +161,7 @@ export function AnalysisPanel({ messages, analysisData, onSendMessage }: Analysi
 
         {/* Download & Share */}
         <div className="mt-8 flex flex-wrap justify-center gap-4">
-          <Button>
+          <Button onClick={handleDownloadPdf}>
             📥 Download Full Report (PDF)
           </Button>
           <Button variant="secondary">
