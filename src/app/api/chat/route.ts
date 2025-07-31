@@ -76,7 +76,7 @@ const availableFunctions: { [key: string]: Function } = {
 
 async function runChatWithTools(messages: ChatCompletionMessageParam[]) {
   const response = await openai.chat.completions.create({
-    model: 'gpt-3.5-turbo',
+    model: 'gpt-4.1-nano',
     messages,
     tools,
     tool_choice: 'auto',
@@ -118,7 +118,7 @@ async function runChatWithTools(messages: ChatCompletionMessageParam[]) {
     messages.push(...toolMessages); // Add tool outputs to history
 
     const secondResponse = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-4.1-nano',
       messages,
     });
     return secondResponse.choices[0].message;

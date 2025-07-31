@@ -74,7 +74,7 @@ export default function Home() {
         throw new Error(data.error || `HTTP error! status: ${response.status}`);
       }
 
-      console.log('data :>> ', data);
+      // console.log('data :>> ', data);
       setMessages(data.messages);
       setAnalysisData(data.analysis);
       setShowAnalysisPanel(true);
@@ -106,7 +106,7 @@ export default function Home() {
         throw new Error(data.error || `HTTP error! status: ${response.status}`);
       }
 
-      console.log('data :>> ', data);
+      // console.log('data :>> ', data);
 
       if (data.analysis) {
         setAnalysisData(data.analysis);
