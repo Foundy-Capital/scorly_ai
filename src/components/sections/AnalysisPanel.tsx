@@ -142,7 +142,6 @@ export function AnalysisPanel({ messages, analysisData, onSendMessage }: Analysi
                 <div>
                   <h4 className="text-md font-semibold mb-2 border-b pb-2">Documents</h4>
                   <div className="p-4 rounded-lg bg-gray-100 dark:bg-gray-900">
-                    <p className="font-bold text-lg mb-2">{analysisData.final_verdict.decision}</p>
                     <ul className="list-disc list-inside text-sm">
                       <p><strong>All Documents:</strong> <a target='_blank' href={analysisData?.all_documents}>Open Dropbox</a></p>
                     </ul>

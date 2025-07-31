@@ -76,7 +76,7 @@ const availableFunctions: { [key: string]: Function } = {
 
 async function runChatWithTools(messages: ChatCompletionMessageParam[]) {
   const response = await openai.chat.completions.create({
-    model: 'gpt-3.5-turbo',
+    model: 'gpt-4.1-nano',
     messages,
     tools,
     tool_choice: 'auto',
@@ -105,6 +105,10 @@ async function runChatWithTools(messages: ChatCompletionMessageParam[]) {
         functionResponse = await functionToCall(functionArgs.query);
       }
 
+      if (!functionResponse) {
+        throw new Error(`No response from ${functionName}`)
+      }
+
       toolMessages.push({
         tool_call_id: toolCall.id,
         role: 'tool',
@@ -114,7 +118,7 @@ async function runChatWithTools(messages: ChatCompletionMessageParam[]) {
     messages.push(...toolMessages); // Add tool outputs to history
 
     const secondResponse = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-4.1-nano',
       messages,
     });
     return secondResponse.choices[0].message;
@@ -167,6 +171,6 @@ export async function POST(req: NextRequest) {
     }
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: 'Something went wrong' }, { status: 500 });
+    return NextResponse.json({ error: `Something went wrong. ${error.message}` }, { status: 500 });
   }
 }

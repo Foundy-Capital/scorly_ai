@@ -24,9 +24,9 @@ export async function postSearch(query: string) {
       const title = $(el).find('.result__a').text().trim();
       const link = $(el).find('.result__a').attr('href');
       const snippet = $(el).find('.result__snippet').text().trim();
-      console.log('title :>> ', title);
-      console.log('link :>> ', link);
-      console.log('snippet :>> ', snippet);
+      // console.log('title :>> ', title);
+      // console.log('link :>> ', link);
+      // console.log('snippet :>> ', snippet);
 
       if (title && link) {
         results.push({
