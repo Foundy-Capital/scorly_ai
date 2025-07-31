@@ -105,6 +105,10 @@ async function runChatWithTools(messages: ChatCompletionMessageParam[]) {
         functionResponse = await functionToCall(functionArgs.query);
       }
 
+      if (!functionResponse) {
+        throw new Error(`No response from ${functionName}`)
+      }
+
       toolMessages.push({
         tool_call_id: toolCall.id,
         role: 'tool',
@@ -167,6 +171,6 @@ export async function POST(req: NextRequest) {
     }
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: 'Something went wrong' }, { status: 500 });
+    return NextResponse.json({ error: `Something went wrong. ${error.message}` }, { status: 500 });
   }
 }

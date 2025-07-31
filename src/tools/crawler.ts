@@ -17,8 +17,6 @@ export async function webCrawler(url: string) {
     return scrapeResult.markdown
   } catch (error) {
     console.error(`Error in webCrawler calling /api/crawl for ${url}:`, error);
-    return JSON.stringify({
-      error: 'Failed to crawl the URL by calling the crawl API.',
-    });
+    return null
   }
 }
