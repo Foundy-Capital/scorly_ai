@@ -1,0 +1,55 @@
+import { ScoredAsset } from '@/types/scoredAssets';
+
+export const mockScoredAssets: ScoredAsset[] = [
+  {
+    id: '1',
+    token_symbol: 'BONDx',
+    issuer: 'CrediCo',
+    category: 'credit',
+    chain: 'Ethereum',
+    total_score: 82.4,
+    liquidity_tvl_usd: 3400000,
+    risk_flags: ['Upgradable contracts'],
+  },
+  {
+    id: '2',
+    token_symbol: 'HOUSE',
+    issuer: 'RealEstateDAO',
+    category: 'real_estate',
+    chain: 'Polygon',
+    total_score: 75.2,
+    liquidity_tvl_usd: 1200000,
+    risk_flags: ['Low liquidity'],
+  },
+  {
+    id: '3',
+    token_symbol: 'GOLD',
+    issuer: 'CommoditiesInc',
+    category: 'commodities',
+    chain: 'Arbitrum',
+    total_score: 88.1,
+    liquidity_tvl_usd: 5000000,
+    risk_flags: [],
+  },
+  {
+    id: '4',
+    token_symbol: 'DEBT',
+    issuer: 'DebtIssuer',
+    category: 'credit',
+    chain: 'Ethereum',
+    total_score: 65.3,
+    liquidity_tvl_usd: 800000,
+    risk_flags: ['High volatility', 'Regulatory concerns'],
+  },
+  {
+    id: '5',
+    token_symbol: 'PROP',
+    issuer: 'PropertyToken',
+    category: 'real_estate',
+    chain: 'BSC',
+    total_score: 91.7,
+    liquidity_tvl_usd: 2500000,
+    risk_flags: ['Custody risks'],
+  },
+  // Add more as needed
+];
