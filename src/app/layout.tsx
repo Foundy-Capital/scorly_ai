@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { ModalProvider } from '@/components/ModalContext';
 
 export const metadata: Metadata = {
   title: 'RWA Scoring Platform',
@@ -13,7 +14,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <ModalProvider>
+          {children}
+        </ModalProvider>
+      </body>
     </html>
   )
 }
