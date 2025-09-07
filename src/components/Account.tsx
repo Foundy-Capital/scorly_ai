@@ -1,6 +1,8 @@
+'use client';
+
 import Image from 'next/image'
 import { useAccount, useDisconnect, useConnect } from 'wagmi'
-import { Wallet } from './icons'
+import { Wallet } from './ui/icons'
 import { base } from 'wagmi/chains'
 import { useEffect, useState } from 'react'
 

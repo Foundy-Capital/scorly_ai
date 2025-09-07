@@ -8,11 +8,22 @@ import { HeroSection } from '@/components/sections/HeroSection'
 import { SubmissionModule } from '@/components/sections/SubmissionModule'
 import { AnalysisPanel } from '@/components/sections/AnalysisPanel'
 import { ErrorNotification } from '@/components/ui/ErrorNotification'
-import { Account } from '@/components/ui/Account'
 import { Paywall } from '@/components/Paywall'
 import { useModal } from '@/components/ModalContext'
+import dynamic from 'next/dynamic'
 
 import { config } from '@/config/web3'
+
+// Dynamically import Account component to prevent hydration mismatch
+const Account = dynamic(() => import('@/components/Account').then(mod => ({ default: mod.Account })), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-500 rounded-lg">
+      <div className="w-5 h-5 bg-gray-300 rounded"></div>
+      Loading...
+    </div>
+  )
+})
 
 interface ChatMessage {
   role: string
