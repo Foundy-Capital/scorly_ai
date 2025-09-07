@@ -18,7 +18,8 @@ export default function Scores() {
         onClose={closePaywall}
         onSuccess={() => {
           // Handle success - refresh the page or update state
-          window.location.reload();
+          // window.location.reload();
+          // console.log('granted access')
         }}
       />
     </>

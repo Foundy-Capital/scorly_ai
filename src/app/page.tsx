@@ -1,29 +1,12 @@
 'use client'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { WagmiProvider } from 'wagmi'
 
 import { useState, useEffect } from 'react'
-import { CircleDollarSign, Coins, FileText, MessageCircle } from '@/components/ui/icons'
 import { HeroSection } from '@/components/sections/HeroSection'
 import { SubmissionModule } from '@/components/sections/SubmissionModule'
 import { AnalysisPanel } from '@/components/sections/AnalysisPanel'
 import { ErrorNotification } from '@/components/ui/ErrorNotification'
 import { Paywall } from '@/components/Paywall'
 import { useModal } from '@/components/ModalContext'
-import dynamic from 'next/dynamic'
-
-import { config } from '@/config/web3'
-
-// Dynamically import Account component to prevent hydration mismatch
-const Account = dynamic(() => import('@/components/Account').then(mod => ({ default: mod.Account })), {
-  ssr: false,
-  loading: () => (
-    <div className="flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-500 rounded-lg">
-      <div className="w-5 h-5 bg-gray-300 rounded"></div>
-      Loading...
-    </div>
-  )
-})
 
 interface ChatMessage {
   role: string
@@ -57,8 +40,6 @@ interface AssetAnalysis {
   }
   all_documents: string
 }
-
-const queryClient = new QueryClient()
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
@@ -140,25 +121,7 @@ export default function Home() {
   }
 
   return (
-    <WagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>
-        <div className="min-h-screen bg-gray-50">
-          <header className="bg-white shadow-sm">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-2">
-                  <Coins className="w-8 h-8 text-brown-600" />
-                  <div>
-                    <h1 className="text-xl font-bold text-gray-900">Scorly</h1>
-                    <p className="text-sm text-gray-600">...</p>
-                  </div>
-                </div>
-
-                <Account />
-              </div>
-            </div>
-          </header>
-          <main className="flex-grow">
+    <>
             {error && <ErrorNotification message={error} />}
             <HeroSection />
             <SubmissionModule onGenerateReport={handleInitialAnalysis} isLoading={isLoading} />
@@ -219,9 +182,6 @@ export default function Home() {
                 window.location.href = '/scores'
               }}
             />
-          </main>
-        </div>
-      </QueryClientProvider>
-    </WagmiProvider>
+    </>
   )
 }

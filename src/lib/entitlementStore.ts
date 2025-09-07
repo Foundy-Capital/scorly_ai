@@ -3,6 +3,28 @@ import { Entitlement } from '@/types/entitlement';
 // In-memory storage for MVP - in production, use database
 let entitlements: Entitlement[] = [];
 
+// Initialize with mock entitlement for development
+const initializeMockEntitlement = () => {
+  const now = new Date();
+  const oneYearFromNow = new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000).toISOString();
+
+  const mockEntitlement: Entitlement = {
+    id: 'mock_ent_001',
+    userId: 'user1',
+    tier: 'scor_access_pass',
+    tokenSelected: 'USDT',
+    plan: 'yearly',
+    status: 'active',
+    startedAt: now.toISOString(),
+    expiresAt: oneYearFromNow,
+  };
+
+  entitlements.push(mockEntitlement);
+};
+
+// Initialize mock data
+initializeMockEntitlement();
+
 // For MVP, assume single user with ID 'user1'
 const USER_ID = 'user1';
 
