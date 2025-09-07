@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 import { ModalProvider } from '@/components/ModalContext'
 import { Header } from '@/components/Header'
+import { Footer } from '@/components/Footer'
 import Providers from './providers'
 
 export const metadata: Metadata = {
@@ -15,9 +16,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <html lang="en">
         <body>
           <ModalProvider>
-            <div className="min-h-screen bg-gray-50">
+            <div className="min-h-screen bg-gray-50 flex flex-col">
               <Header />
               <main className="flex-grow">{children}</main>
+              <Footer />
             </div>
           </ModalProvider>
         </body>
