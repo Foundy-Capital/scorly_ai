@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum CategoryType {
+  real_estate
+  credit
+  commodities
+  other
+}
+
+model ScoredAsset {
+  id                String       @id @default(cuid())
+  token_symbol      String
+  issuer            String
+  category          CategoryType
+  chain             String
+  total_score       Float
+  liquidity_tvl_usd Float
+  risk_flags        String[]
+  description       String?
+
+  @@map("scored_assets")
+}

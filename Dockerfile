@@ -12,6 +12,9 @@ RUN npm ci
 # Copy source code
 COPY . .
 
+# Generate Prisma client
+RUN npm run generate
+
 # Build the application
 RUN npm run build
 
@@ -31,6 +34,7 @@ RUN npm ci --omit=dev && npm cache clean --force
 # Copy built application from builder stage
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
+COPY --from=builder /app/src/generated ./src/generated
 COPY --from=builder /app/package.json ./
 
 # Install PM2 globally
