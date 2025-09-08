@@ -132,6 +132,42 @@ exports.Prisma.ScoredAssetScalarFieldEnum = {
   description: 'description'
 };
 
+exports.Prisma.UserScalarFieldEnum = {
+  id: 'id',
+  walletAddress: 'walletAddress',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PlanScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  displayName: 'displayName',
+  duration: 'duration',
+  price: 'price',
+  salePrice: 'salePrice',
+  saleStart: 'saleStart',
+  saleEnd: 'saleEnd',
+  tier: 'tier',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SubscriptionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  planId: 'planId',
+  token: 'token',
+  status: 'status',
+  purchasePrice: 'purchasePrice',
+  startedAt: 'startedAt',
+  expiresAt: 'expiresAt',
+  txHash: 'txHash',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -154,7 +190,10 @@ exports.CategoryType = exports.$Enums.CategoryType = {
 };
 
 exports.Prisma.ModelName = {
-  ScoredAsset: 'ScoredAsset'
+  ScoredAsset: 'ScoredAsset',
+  User: 'User',
+  Plan: 'Plan',
+  Subscription: 'Subscription'
 };
 
 /**
