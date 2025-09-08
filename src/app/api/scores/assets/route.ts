@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { mockScoredAssets } from '@/lib/mockData';
+import { prisma } from '@/lib/prisma';
 import { isEntitlementActive } from '@/lib/entitlementStore';
-import { ScoredAssetsResponse } from '@/types/scoredAssets';
+import { ScoredAssetsResponse, CategoryType } from '@/types/scoredAssets';
 
 export async function GET(request: NextRequest) {
   try {
@@ -17,23 +17,25 @@ export async function GET(request: NextRequest) {
     const chain = searchParams.get('chain');
     const issuer = searchParams.get('issuer');
 
-    let filteredAssets = mockScoredAssets;
+    const where: any = {};
 
     if (category) {
-      filteredAssets = filteredAssets.filter(asset => asset.category === category);
+      where.category = category as CategoryType;
     }
     if (minScore > 0) {
-      filteredAssets = filteredAssets.filter(asset => asset.total_score >= minScore);
+      where.total_score = { gte: minScore };
     }
     if (minTVL > 0) {
-      filteredAssets = filteredAssets.filter(asset => asset.liquidity_tvl_usd >= minTVL);
+      where.liquidity_tvl_usd = { gte: minTVL };
     }
     if (chain) {
-      filteredAssets = filteredAssets.filter(asset => asset.chain.toLowerCase().includes(chain.toLowerCase()));
+      where.chain = { contains: chain, mode: 'insensitive' };
     }
     if (issuer) {
-      filteredAssets = filteredAssets.filter(asset => asset.issuer.toLowerCase().includes(issuer.toLowerCase()));
+      where.issuer = { contains: issuer, mode: 'insensitive' };
     }
+
+    const filteredAssets = await prisma.scoredAsset.findMany({ where });
 
     const response: ScoredAssetsResponse = {
       items: filteredAssets,

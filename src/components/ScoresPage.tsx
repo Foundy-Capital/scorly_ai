@@ -58,9 +58,15 @@ export default function ScoresPage() {
     }
   }
 
+  // Initial data fetch on component mount
   useEffect(() => {
     fetchAssets()
-  })
+  }, [])
+
+  // Fetch data when filters change
+  useEffect(() => {
+    fetchAssets()
+  }, [filters])
 
   const handleFilterChange = (key: keyof Filters, value: string | number) => {
     setFilters((prev) => ({ ...prev, [key]: value }))
