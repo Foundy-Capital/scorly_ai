@@ -1,70 +1,70 @@
-'use client';
+'use client'
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { ScoredAsset, CategoryType } from '@/types/scoredAssets';
-import { logScoresViewed, logFiltersUsed } from '@/lib/telemetry';
-import { useModal } from './ModalContext';
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { ScoredAsset, CategoryType } from '@/types/scoredAssets'
+import { logScoresViewed, logFiltersUsed } from '@/lib/telemetry'
+import { useModal } from './ModalContext'
 
 interface Filters {
-  category: string;
-  chain: string;
-  issuer: string;
-  minScore: number;
-  minTVL: number;
+  category: string
+  chain: string
+  issuer: string
+  minScore: number
+  minTVL: number
 }
 
 export default function ScoresPage() {
-  const [items, setItems] = useState<ScoredAsset[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [items, setItems] = useState<ScoredAsset[]>([])
+  const [loading, setLoading] = useState(true)
   const [filters, setFilters] = useState<Filters>({
     category: '',
     chain: '',
     issuer: '',
     minScore: 0,
     minTVL: 0,
-  });
-  const router = useRouter();
-  const { openPaywall } = useModal();
+  })
+  const router = useRouter()
+  const { openPaywall } = useModal()
 
   useEffect(() => {
-    logScoresViewed('user1');
-  }, []);
-
-  useEffect(() => {
-    fetchAssets();
-  }, [filters]);
+    logScoresViewed('user1')
+  }, [])
 
   const fetchAssets = async () => {
     try {
-      setLoading(true);
-      const params = new URLSearchParams();
-      if (filters.category) params.append('category', filters.category);
-      if (filters.chain) params.append('chain', filters.chain);
-      if (filters.issuer) params.append('issuer', filters.issuer);
-      if (filters.minScore > 0) params.append('minScore', filters.minScore.toString());
-      if (filters.minTVL > 0) params.append('minTVL', filters.minTVL.toString());
+      setLoading(true)
+      const params = new URLSearchParams()
+      if (filters.category) params.append('category', filters.category)
+      if (filters.chain) params.append('chain', filters.chain)
+      if (filters.issuer) params.append('issuer', filters.issuer)
+      if (filters.minScore > 0) params.append('minScore', filters.minScore.toString())
+      if (filters.minTVL > 0) params.append('minTVL', filters.minTVL.toString())
 
-      logFiltersUsed(filters);
+      logFiltersUsed(filters)
 
-      const res = await fetch(`/api/scores/assets?${params}`);
+      const res = await fetch(`/api/scores/assets?${params}`)
       if (res.status === 402) {
         // Open paywall modal
-        openPaywall();
-        return;
+        openPaywall()
+        return
       }
-      const data = await res.json();
-      setItems(data.items);
+      const data = await res.json()
+      setItems(data.items)
     } catch (error) {
-      console.error('Error fetching assets:', error);
+      console.error('Error fetching assets:', error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
+
+  useEffect(() => {
+    fetchAssets()
+  })
 
   const handleFilterChange = (key: keyof Filters, value: string | number) => {
-    setFilters(prev => ({ ...prev, [key]: value }));
-  };
+    setFilters((prev) => ({ ...prev, [key]: value }))
+  }
 
   return (
     <div className="container mx-auto p-6">
@@ -163,5 +163,5 @@ export default function ScoresPage() {
         </div>
       )}
     </div>
-  );
+  )
 }

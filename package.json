@@ -6,10 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "seed": "npx tsx prisma/seed.ts"
   },
   "dependencies": {
     "@mendable/firecrawl-js": "^1.29.2",
+    "@prisma/client": "^6.15.0",
     "@tanstack/react-query": "^5.86.0",
     "axios": "^1.11.0",
     "cheerio": "^1.1.2",
@@ -34,7 +36,9 @@
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
     "postcss": "^8.5.6",
+    "prisma": "^6.15.0",
     "tailwindcss": "^3.4.17",
+    "tsx": "^4.7.0",
     "typescript": "^5"
   }
 }
