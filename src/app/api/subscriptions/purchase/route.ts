@@ -31,13 +31,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid wallet address format' }, { status: 400 });
     }
 
-    // Find user
-    const user = await prisma.user.findUnique({
+    // Find or create user
+    let user = await prisma.user.findUnique({
       where: { walletAddress: walletAddress.toLowerCase() },
     });
 
     if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+      // Create user if they don't exist
+      user = await prisma.user.create({
+        data: {
+          walletAddress: walletAddress.toLowerCase(),
+        },
+      });
     }
 
     // Find plan

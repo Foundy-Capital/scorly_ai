@@ -2,11 +2,45 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { ScoredAssetsResponse, CategoryType } from '@/types/scoredAssets';
 
+async function checkUserEntitlement(walletAddress: string): Promise<boolean> {
+  try {
+    if (!walletAddress) return false;
+
+    // Find user
+    const user = await prisma.user.findUnique({
+      where: { walletAddress: walletAddress.toLowerCase() },
+    });
+
+    if (!user) return false;
+
+    // Check for active subscription
+    const activeSubscription = await prisma.subscription.findFirst({
+      where: {
+        userId: user.id,
+        status: 'active',
+        expiresAt: {
+          gt: new Date(),
+        },
+      },
+    });
+
+    return !!activeSubscription;
+  } catch (error) {
+    console.error('Entitlement check error:', error);
+    return false;
+  }
+}
+
 export async function GET(request: NextRequest) {
   try {
-    // Entitlement check is handled by middleware
-
     const { searchParams } = new URL(request.url);
+    const walletAddress = searchParams.get('walletAddress');
+
+    // Check user entitlement
+    const hasEntitlement = await checkUserEntitlement(walletAddress || '');
+    if (!hasEntitlement) {
+      return NextResponse.json({ error: 'Payment Required' }, { status: 402 });
+    }
     const category = searchParams.get('category');
     const minScore = searchParams.get('minScore') ? parseFloat(searchParams.get('minScore')!) : 0;
     const minTVL = searchParams.get('minTVL') ? parseFloat(searchParams.get('minTVL')!) : 0;

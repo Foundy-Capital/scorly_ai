@@ -1,79 +1,83 @@
-'use client';
+'use client'
 
-import { useState, useEffect } from 'react';
-import { TokenType, PlanType } from '@/types/entitlement';
-import { logPaywallViewed, logPaywallCtaClicked } from '@/lib/telemetry';
-import { useAccount } from 'wagmi';
+import { useState, useEffect } from 'react'
+import { TokenType, PlanType } from '@/types/entitlement'
+import { logPaywallViewed, logPaywallCtaClicked } from '@/lib/telemetry'
+import { useAccount, useConnect } from 'wagmi'
 
 interface Plan {
-  id: string;
-  name: string;
-  displayName: string;
-  duration: number;
-  price: number;
-  salePrice: number | null;
-  tier: string;
+  id: string
+  name: string
+  displayName: string
+  duration: number
+  price: number
+  salePrice: number | null
+  tier: string
 }
 
 interface PaywallProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSuccess?: () => void;
+  isOpen: boolean
+  onClose: () => void
+  onSuccess?: () => void
 }
 
 export function Paywall({ isOpen, onClose, onSuccess }: PaywallProps) {
-  const [token, setToken] = useState<TokenType>('USDC');
-  const [plan, setPlan] = useState<PlanType>('monthly');
-  const [loading, setLoading] = useState(false);
-  const [plans, setPlans] = useState<Plan[]>([]);
-  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
-  const { address } = useAccount();
+  const [token, setToken] = useState<TokenType>('USDC')
+  const [plan, setPlan] = useState<PlanType>('monthly')
+  const [loading, setLoading] = useState(false)
+  const [plans, setPlans] = useState<Plan[]>([])
+  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null)
+  const { address } = useAccount()
+  const { connect, connectors } = useConnect()
 
   useEffect(() => {
     if (isOpen) {
-      logPaywallViewed();
-      fetchPlans();
+      logPaywallViewed()
+      fetchPlans()
     }
-  }, [isOpen]);
+  }, [isOpen])
 
   useEffect(() => {
     if (plans.length > 0) {
-      const currentPlan = plans.find(p => p.name === plan);
-      setSelectedPlan(currentPlan || null);
+      const currentPlan = plans.find((p) => p.name === plan)
+      setSelectedPlan(currentPlan || null)
     }
-  }, [plan, plans]);
+  }, [plan, plans])
 
   const fetchPlans = async () => {
     try {
-      const response = await fetch('/api/plans');
+      const response = await fetch('/api/plans')
       if (response.ok) {
-        const data = await response.json();
-        setPlans(data.plans);
+        const data = await response.json()
+        setPlans(data.plans)
       }
     } catch (error) {
-      console.error('Error fetching plans:', error);
+      console.error('Error fetching plans:', error)
     }
-  };
+  }
 
   const onGetAccess = async () => {
     if (!address) {
-      alert('Please connect your wallet first');
-      return;
+      // Connect wallet if not connected
+      if (connectors.length > 0) {
+        connect({ connector: connectors[0] })
+      }
+      return
     }
 
     if (!selectedPlan) {
-      alert('Plan not found');
-      return;
+      alert('Plan not found')
+      return
     }
 
-    logPaywallCtaClicked(token, plan);
+    logPaywallCtaClicked(token, plan)
 
     try {
-      setLoading(true);
+      setLoading(true)
 
       // Create mock transaction data
-      const mockTransactionHash = `mock_tx_${Date.now()}`;
-      const purchasePrice = selectedPlan.salePrice || selectedPlan.price;
+      const mockTransactionHash = `mock_tx_${Date.now()}`
+      const purchasePrice = selectedPlan.salePrice || selectedPlan.price
 
       const res = await fetch('/api/subscriptions/purchase', {
         method: 'POST',
@@ -85,36 +89,33 @@ export function Paywall({ isOpen, onClose, onSuccess }: PaywallProps) {
           transactionHash: mockTransactionHash,
           purchasePrice,
         }),
-      });
+      })
 
       if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || 'Subscription creation failed');
+        const errorData = await res.json()
+        throw new Error(errorData.error || 'Subscription creation failed')
       }
 
-      const data = await res.json();
+      const data = await res.json()
 
       // Success
-      alert('Subscription created successfully! Access granted.');
-      onSuccess?.();
-      onClose();
+      alert('Subscription created successfully! Access granted.')
+      onSuccess?.()
+      // onClose()
     } catch (e) {
-      console.error(e);
-      alert(`Subscription failed: ${e instanceof Error ? e.message : 'Please try again.'}`);
+      console.error(e)
+      alert(`Subscription failed: ${e instanceof Error ? e.message : 'Please try again.'}`)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
-  if (!isOpen) return null;
+  if (!isOpen) return null
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-lg max-w-md w-full mx-4 p-6 relative">
-        <button
-          onClick={onClose}
-          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
-        >
+        <button onClick={onClose} className="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
           ×
         </button>
         <h2 className="text-2xl font-bold mb-4">Unlock All Scored Assets</h2>
@@ -158,12 +159,15 @@ export function Paywall({ isOpen, onClose, onSuccess }: PaywallProps) {
           disabled={loading || !address}
           className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 disabled:opacity-50"
         >
-          {loading ? 'Processing...' :
-           !address ? 'Connect Wallet First' :
-           selectedPlan ? `Subscribe for $${(selectedPlan.salePrice || selectedPlan.price).toFixed(2)}` :
-           'Get access'}
+          {loading
+            ? 'Processing...'
+            : !address
+            ? 'Connect Wallet First'
+            : selectedPlan
+            ? `Subscribe for $${(selectedPlan.salePrice || selectedPlan.price).toFixed(2)}`
+            : 'Get access'}
         </button>
       </div>
     </div>
-  );
+  )
 }

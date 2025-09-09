@@ -29,7 +29,7 @@ export function withEntitlementGuard<T extends {}>(WrappedComponent: ComponentTy
         }
 
         try {
-          const res = await fetch(`/api/subscriptions/me?walletAddress=${address}`);
+          const res = await fetch(`/api/entitlements/me?walletAddress=${address}`);
           const data: EntitlementResponse = await res.json();
           if (data.active) {
             setHasAccess(true);
