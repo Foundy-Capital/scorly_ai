@@ -46,6 +46,7 @@ export async function GET(request: NextRequest) {
     const minTVL = searchParams.get('minTVL') ? parseFloat(searchParams.get('minTVL')!) : 0;
     const chain = searchParams.get('chain');
     const issuer = searchParams.get('issuer');
+    const url = searchParams.get('url');
 
     const where: any = {};
 
@@ -63,6 +64,9 @@ export async function GET(request: NextRequest) {
     }
     if (issuer) {
       where.issuer = { contains: issuer, mode: 'insensitive' };
+    }
+    if (url) {
+      where.url = url;
     }
 
     const filteredAssets = await prisma.scoredAsset.findMany({ where });

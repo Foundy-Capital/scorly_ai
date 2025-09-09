@@ -1,7 +1,7 @@
 export type CategoryType = 'real_estate' | 'credit' | 'commodities' | 'other';
 
 export interface ScoredAsset {
-  id: string;
+  id: number;
   token_symbol: string;
   issuer: string;
   category: CategoryType;
@@ -10,6 +10,8 @@ export interface ScoredAsset {
   liquidity_tvl_usd: number;
   risk_flags: string[];
   description?: string;
+  full_text?: string;
+  url?: string;
 }
 
 export interface ScoredAssetsResponse {

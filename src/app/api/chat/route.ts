@@ -5,6 +5,7 @@ import { SYSTEM_PROMPT } from '@/config/prompts';
 import { postSearch } from '@/tools/search';
 import { webCrawler } from '@/tools/crawler';
 import { fetchDocumentFromDropbox, extractTextContent } from '@/tools/document';
+import { prisma } from '@/lib/prisma';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -76,7 +77,7 @@ const availableFunctions: { [key: string]: Function } = {
 
 async function runChatWithTools(messages: ChatCompletionMessageParam[]) {
   const response = await openai.chat.completions.create({
-    model: 'gpt-4.1-nano',
+    model: 'gpt-5-nano',
     messages,
     tools,
     tool_choice: 'auto',
@@ -92,9 +93,9 @@ async function runChatWithTools(messages: ChatCompletionMessageParam[]) {
     const toolMessages: ChatCompletionMessageParam[] = [];
 
     for (const toolCall of toolCalls) {
-      const functionName = toolCall.function.name;
+      const functionName = toolCall.function?.name || (toolCall as any).tool_call?.function?.name;
       const functionToCall = availableFunctions[functionName];
-      const functionArgs = JSON.parse(toolCall.function.arguments);
+      const functionArgs = JSON.parse(toolCall.function?.arguments || (toolCall as any).tool_call?.function?.arguments);
       let functionResponse;
 
       if (functionName === 'webCrawler') {
@@ -118,7 +119,7 @@ async function runChatWithTools(messages: ChatCompletionMessageParam[]) {
     messages.push(...toolMessages); // Add tool outputs to history
 
     const secondResponse = await openai.chat.completions.create({
-      model: 'gpt-4.1-nano',
+      model: 'gpt-5-nano',
       messages,
     });
     return secondResponse.choices[0].message;
@@ -155,6 +156,36 @@ export async function POST(req: NextRequest) {
     let analysisData = null;
     if (aiContent.index_inclusion_score?.score_percent > 0) {
       analysisData = aiContent;
+    }
+
+    // Store the analysis in the database if it's an initial analysis
+    if (isInitialAnalysis && analysisData) {
+      try {
+        const categoryMap: { [key: string]: string } = {
+          'real estate': 'real_estate',
+          'credit': 'credit',
+          'commodities': 'commodities',
+          'other': 'other',
+        };
+        const category = categoryMap[analysisData.asset_type.toLowerCase()] || 'other';
+
+        await prisma.scoredAsset.create({
+          data: {
+            token_symbol: analysisData.token,
+            issuer: analysisData.issuer,
+            category: category as any,
+            chain: analysisData.chain,
+            total_score: analysisData.index_inclusion_score.score_percent,
+            liquidity_tvl_usd: 0, // Default, can be updated later
+            risk_flags: analysisData.key_highlights.key_risks,
+            full_text: JSON.stringify(analysisData),
+            url: url,
+          },
+        });
+      } catch (dbError) {
+        console.error('Error storing analysis in DB:', dbError);
+        // Don't fail the request if DB storage fails
+      }
     }
 
     if (isInitialAnalysis) {

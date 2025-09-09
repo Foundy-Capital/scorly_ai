@@ -175,6 +175,7 @@ function ScoresPage() {
                 <th className="py-2 px-4 border">Score</th>
                 <th className="py-2 px-4 border">TVL (USD)</th>
                 <th className="py-2 px-4 border">Risks</th>
+                <th className="py-2 px-4 border">Details</th>
               </tr>
             </thead>
             <tbody>
@@ -187,6 +188,7 @@ function ScoresPage() {
                   <td className="py-2 px-4 border">{asset.total_score}</td>
                   <td className="py-2 px-4 border">{asset.liquidity_tvl_usd.toLocaleString()}</td>
                   <td className="py-2 px-4 border">{asset.risk_flags.join(', ')}</td>
+                  <td className="py-2 px-4 border"><a>Open</a></td>
                 </tr>
               ))}
             </tbody>

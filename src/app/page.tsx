@@ -65,6 +65,20 @@ export default function Home() {
     setError(null)
 
     try {
+      // Check if the URL has been analyzed before
+      const existingResponse = await fetch(`/api/scores/check-url?url=${encodeURIComponent(url)}`)
+      if (existingResponse.ok) {
+        const existingData = await existingResponse.json()
+        if (existingData.found && existingData.analysis) {
+          setMessages([{ role: 'assistant', content: JSON.stringify(existingData.analysis) }])
+          setAnalysisData(existingData.analysis)
+          setShowAnalysisPanel(true)
+          setIsLoading(false)
+          return
+        }
+      }
+
+      // If not found or no full_text, proceed with AI analysis
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
