@@ -4,7 +4,7 @@ export type EntitlementStatus = 'active' | 'expired' | 'revoked';
 
 export interface Entitlement {
   id: string;
-  userId: string;
+  userId: number;
   tier: 'scor_access_pass';
   tokenSelected: TokenType;
   plan: PlanType;

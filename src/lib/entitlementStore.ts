@@ -10,7 +10,7 @@ const initializeMockEntitlement = () => {
 
   const mockEntitlement: Entitlement = {
     id: 'mock_ent_001',
-    userId: 'user1',
+    userId: 1,
     tier: 'scor_access_pass',
     tokenSelected: 'USDT',
     plan: 'yearly',
@@ -25,15 +25,15 @@ const initializeMockEntitlement = () => {
 // Initialize mock data
 initializeMockEntitlement();
 
-// For MVP, assume single user with ID 'user1'
-const USER_ID = 'user1';
+// For MVP, assume single user with ID 1
+const USER_ID = 1;
 
-export function getEntitlement(userId: string = USER_ID): Entitlement | null {
+export function getEntitlement(userId: number = USER_ID): Entitlement | null {
   return entitlements.find(e => e.userId === userId && e.tier === 'scor_access_pass') || null;
 }
 
 export function createOrUpdateEntitlement(
-  userId: string,
+  userId: number,
   token: 'USDT' | 'USDC' | 'SCOR',
   plan: 'monthly' | 'quarterly' | 'yearly'
 ): Entitlement {
@@ -65,7 +65,7 @@ export function createOrUpdateEntitlement(
   }
 }
 
-export function isEntitlementActive(userId: string = USER_ID): boolean {
+export function isEntitlementActive(userId: number = USER_ID): boolean {
   const ent = getEntitlement(userId);
   if (!ent) return false;
   return ent.status === 'active' && new Date(ent.expiresAt) > new Date();

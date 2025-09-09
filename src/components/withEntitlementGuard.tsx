@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { ComponentType } from 'react';
 import { useRouter } from 'next/navigation';
 import { useModal } from './ModalContext';
+import { useAccount } from 'wagmi';
 
 interface EntitlementResponse {
   active: boolean;
@@ -17,11 +18,18 @@ export function withEntitlementGuard<T extends {}>(WrappedComponent: ComponentTy
     const [hasAccess, setHasAccess] = useState(false);
     const router = useRouter();
     const { openPaywall } = useModal();
+    const { address, isConnected } = useAccount();
 
     useEffect(() => {
       const checkEntitlement = async () => {
+        if (!isConnected || !address) {
+          openPaywall();
+          setIsLoading(false);
+          return;
+        }
+
         try {
-          const res = await fetch('/api/entitlements/me');
+          const res = await fetch(`/api/subscriptions/me?walletAddress=${address}`);
           const data: EntitlementResponse = await res.json();
           if (data.active) {
             setHasAccess(true);
@@ -37,7 +45,7 @@ export function withEntitlementGuard<T extends {}>(WrappedComponent: ComponentTy
       };
 
       checkEntitlement();
-    }, [router, openPaywall]);
+    }, [router, openPaywall, address, isConnected]);
 
     if (isLoading) {
       return <div className="flex justify-center items-center h-64">Loading...</div>;

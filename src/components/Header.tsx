@@ -32,6 +32,7 @@ export function Header() {
 
           <nav className="flex gap-4">
             <Link href="/scores" className="text-gray-700 hover:text-gray-900">Scores</Link>
+            <Link href="/plans" className="text-gray-700 hover:text-gray-900">Plans</Link>
           </nav>
 
           <Account />

@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Simulate payment success and create/update entitlement
-    const entitlement = createOrUpdateEntitlement('user1', body.token, body.plan);
+    const entitlement = createOrUpdateEntitlement(1, body.token, body.plan);
 
     const response: MockCheckoutResponse = {
       status: 'success',
@@ -28,8 +28,8 @@ export async function POST(request: NextRequest) {
     };
 
     // Log telemetry
-    logMockPaymentSuccess(body.token, body.plan, 'user1');
-    logEntitlementGranted('user1', entitlement.tier, entitlement.expiresAt);
+    logMockPaymentSuccess(body.token, body.plan, 1);
+    logEntitlementGranted(1, entitlement.tier, entitlement.expiresAt);
 
     return NextResponse.json(response);
   } catch (error) {

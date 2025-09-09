@@ -1,14 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { isEntitlementActive } from '@/lib/entitlementStore';
 import { ScoredAssetsResponse, CategoryType } from '@/types/scoredAssets';
 
 export async function GET(request: NextRequest) {
   try {
-    // Check entitlement
-    if (!isEntitlementActive()) {
-      return NextResponse.json({ error: 'Payment Required' }, { status: 402 });
-    }
+    // Entitlement check is handled by middleware
 
     const { searchParams } = new URL(request.url);
     const category = searchParams.get('category');

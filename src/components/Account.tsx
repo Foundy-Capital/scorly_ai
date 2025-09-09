@@ -16,11 +16,46 @@ export function Account() {
   const { connectAsync, connectors } = useConnect()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedChainId, setSelectedChainId] = useState(base.id)
+  const [isLoadingUser, setIsLoadingUser] = useState(false)
 
   useEffect(() => {
     // Set default chain on mount, you can change this to your preferred default
     setSelectedChainId(base.id)
   }, [])
+
+  // Call /api/auth/user when wallet connects
+  useEffect(() => {
+    if (address && isConnected) {
+      createOrUpdateUser(address)
+    }
+  }, [address, isConnected])
+
+  const createOrUpdateUser = async (walletAddress: string) => {
+    setIsLoadingUser(true)
+    try {
+      const response = await fetch('/api/auth/user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ walletAddress }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to create/update user')
+      }
+
+      const data = await response.json()
+      console.log('User created/updated:', data.user)
+
+      // You can store user data in localStorage or context if needed
+      localStorage.setItem('user', JSON.stringify(data.user))
+    } catch (error) {
+      console.error('Error creating/updating user:', error)
+    } finally {
+      setIsLoadingUser(false)
+    }
+  }
 
   async function handleConnect(connector: any) {
     await connectAsync({
@@ -44,11 +79,15 @@ export function Account() {
     <>
       {isConnected ? (
         <button
-          onClick={() => disconnect()}
+          onClick={() => {
+            disconnect()
+            // Clear user data on disconnect
+            localStorage.removeItem('user')
+          }}
           className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50"
         >
           <Wallet className="w-5 h-5" />
-          {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : 'Disconnect'}
+          {isLoadingUser ? 'Loading...' : (address ? `${address.slice(0, 6)}...${address.slice(-4)}` : 'Disconnect')}
         </button>
       ) : (
         <button

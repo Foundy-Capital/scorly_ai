@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { ScoredAsset, CategoryType } from '@/types/scoredAssets'
 import { logScoresViewed, logFiltersUsed } from '@/lib/telemetry'
 import { useModal } from './ModalContext'
+import { useAccount } from 'wagmi'
 
 interface Filters {
   category: string
@@ -17,6 +18,7 @@ interface Filters {
 export default function ScoresPage() {
   const [items, setItems] = useState<ScoredAsset[]>([])
   const [loading, setLoading] = useState(true)
+  const [userId, setUserId] = useState<number | null>(null)
   const [filters, setFilters] = useState<Filters>({
     category: '',
     chain: '',
@@ -26,10 +28,26 @@ export default function ScoresPage() {
   })
   const router = useRouter()
   const { openPaywall } = useModal()
+  const { address } = useAccount()
 
   useEffect(() => {
-    logScoresViewed('user1')
-  }, [])
+    const getUserId = async () => {
+      if (address) {
+        try {
+          const response = await fetch(`/api/auth/user?walletAddress=${address}`)
+          if (response.ok) {
+            const data = await response.json()
+            setUserId(data.user.id)
+            logScoresViewed(data.user.id)
+          }
+        } catch (error) {
+          console.error('Error fetching user:', error)
+        }
+      }
+    }
+
+    getUserId()
+  }, [address])
 
   const fetchAssets = async () => {
     try {
@@ -40,6 +58,11 @@ export default function ScoresPage() {
       if (filters.issuer) params.append('issuer', filters.issuer)
       if (filters.minScore > 0) params.append('minScore', filters.minScore.toString())
       if (filters.minTVL > 0) params.append('minTVL', filters.minTVL.toString())
+
+      // Add wallet address for entitlement check
+      if (address) {
+        params.append('walletAddress', address)
+      }
 
       logFiltersUsed(filters)
 
@@ -61,12 +84,12 @@ export default function ScoresPage() {
   // Initial data fetch on component mount
   useEffect(() => {
     fetchAssets()
-  }, [])
+  }, [address])
 
   // Fetch data when filters change
   useEffect(() => {
     fetchAssets()
-  }, [filters])
+  }, [filters, address])
 
   const handleFilterChange = (key: keyof Filters, value: string | number) => {
     setFilters((prev) => ({ ...prev, [key]: value }))
