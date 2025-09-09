@@ -2296,19 +2296,29 @@ export namespace Prisma {
 
   export type AggregateUser = {
     _count: UserCountAggregateOutputType | null
+    _avg: UserAvgAggregateOutputType | null
+    _sum: UserSumAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
   }
 
+  export type UserAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type UserSumAggregateOutputType = {
+    id: number | null
+  }
+
   export type UserMinAggregateOutputType = {
-    id: string | null
+    id: number | null
     walletAddress: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
   export type UserMaxAggregateOutputType = {
-    id: string | null
+    id: number | null
     walletAddress: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -2322,6 +2332,14 @@ export namespace Prisma {
     _all: number
   }
 
+
+  export type UserAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type UserSumAggregateInputType = {
+    id?: true
+  }
 
   export type UserMinAggregateInputType = {
     id?: true
@@ -2383,6 +2401,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: UserAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: UserMinAggregateInputType
@@ -2413,16 +2443,20 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: UserCountAggregateInputType | true
+    _avg?: UserAvgAggregateInputType
+    _sum?: UserSumAggregateInputType
     _min?: UserMinAggregateInputType
     _max?: UserMaxAggregateInputType
   }
 
   export type UserGroupByOutputType = {
-    id: string
+    id: number
     walletAddress: string
     createdAt: Date
     updatedAt: Date
     _count: UserCountAggregateOutputType | null
+    _avg: UserAvgAggregateOutputType | null
+    _sum: UserSumAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
   }
@@ -2485,7 +2519,7 @@ export namespace Prisma {
       subscriptions: Prisma.$SubscriptionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
-      id: string
+      id: number
       walletAddress: string
       createdAt: Date
       updatedAt: Date
@@ -2913,7 +2947,7 @@ export namespace Prisma {
    * Fields of the User model
    */
   interface UserFieldRefs {
-    readonly id: FieldRef<"User", 'String'>
+    readonly id: FieldRef<"User", 'Int'>
     readonly walletAddress: FieldRef<"User", 'String'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
@@ -3360,19 +3394,21 @@ export namespace Prisma {
   }
 
   export type PlanAvgAggregateOutputType = {
+    id: number | null
     duration: number | null
     price: number | null
     salePrice: number | null
   }
 
   export type PlanSumAggregateOutputType = {
+    id: number | null
     duration: number | null
     price: number | null
     salePrice: number | null
   }
 
   export type PlanMinAggregateOutputType = {
-    id: string | null
+    id: number | null
     name: string | null
     displayName: string | null
     duration: number | null
@@ -3387,7 +3423,7 @@ export namespace Prisma {
   }
 
   export type PlanMaxAggregateOutputType = {
-    id: string | null
+    id: number | null
     name: string | null
     displayName: string | null
     duration: number | null
@@ -3419,12 +3455,14 @@ export namespace Prisma {
 
 
   export type PlanAvgAggregateInputType = {
+    id?: true
     duration?: true
     price?: true
     salePrice?: true
   }
 
   export type PlanSumAggregateInputType = {
+    id?: true
     duration?: true
     price?: true
     salePrice?: true
@@ -3563,7 +3601,7 @@ export namespace Prisma {
   }
 
   export type PlanGroupByOutputType = {
-    id: string
+    id: number
     name: string
     displayName: string
     duration: number
@@ -3672,7 +3710,7 @@ export namespace Prisma {
       subscriptions: Prisma.$SubscriptionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
-      id: string
+      id: number
       name: string
       displayName: string
       duration: number
@@ -4108,7 +4146,7 @@ export namespace Prisma {
    * Fields of the Plan model
    */
   interface PlanFieldRefs {
-    readonly id: FieldRef<"Plan", 'String'>
+    readonly id: FieldRef<"Plan", 'Int'>
     readonly name: FieldRef<"Plan", 'String'>
     readonly displayName: FieldRef<"Plan", 'String'>
     readonly duration: FieldRef<"Plan", 'Int'>
@@ -4563,17 +4601,23 @@ export namespace Prisma {
   }
 
   export type SubscriptionAvgAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    planId: number | null
     purchasePrice: number | null
   }
 
   export type SubscriptionSumAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    planId: number | null
     purchasePrice: number | null
   }
 
   export type SubscriptionMinAggregateOutputType = {
-    id: string | null
-    userId: string | null
-    planId: string | null
+    id: number | null
+    userId: number | null
+    planId: number | null
     token: string | null
     status: string | null
     purchasePrice: number | null
@@ -4585,9 +4629,9 @@ export namespace Prisma {
   }
 
   export type SubscriptionMaxAggregateOutputType = {
-    id: string | null
-    userId: string | null
-    planId: string | null
+    id: number | null
+    userId: number | null
+    planId: number | null
     token: string | null
     status: string | null
     purchasePrice: number | null
@@ -4615,10 +4659,16 @@ export namespace Prisma {
 
 
   export type SubscriptionAvgAggregateInputType = {
+    id?: true
+    userId?: true
+    planId?: true
     purchasePrice?: true
   }
 
   export type SubscriptionSumAggregateInputType = {
+    id?: true
+    userId?: true
+    planId?: true
     purchasePrice?: true
   }
 
@@ -4752,9 +4802,9 @@ export namespace Prisma {
   }
 
   export type SubscriptionGroupByOutputType = {
-    id: string
-    userId: string
-    planId: string
+    id: number
+    userId: number
+    planId: number
     token: string
     status: string
     purchasePrice: number
@@ -4867,9 +4917,9 @@ export namespace Prisma {
       plan: Prisma.$PlanPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
-      id: string
-      userId: string
-      planId: string
+      id: number
+      userId: number
+      planId: number
       token: string
       status: string
       purchasePrice: number
@@ -5303,9 +5353,9 @@ export namespace Prisma {
    * Fields of the Subscription model
    */
   interface SubscriptionFieldRefs {
-    readonly id: FieldRef<"Subscription", 'String'>
-    readonly userId: FieldRef<"Subscription", 'String'>
-    readonly planId: FieldRef<"Subscription", 'String'>
+    readonly id: FieldRef<"Subscription", 'Int'>
+    readonly userId: FieldRef<"Subscription", 'Int'>
+    readonly planId: FieldRef<"Subscription", 'Int'>
     readonly token: FieldRef<"Subscription", 'String'>
     readonly status: FieldRef<"Subscription", 'String'>
     readonly purchasePrice: FieldRef<"Subscription", 'Float'>
@@ -5874,20 +5924,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'DateTime'
-   */
-  export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
-    
-
-
-  /**
-   * Reference to a field of type 'DateTime[]'
-   */
-  export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
-    
-
-
-  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -5898,6 +5934,20 @@ export namespace Prisma {
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'DateTime'
+   */
+  export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+    
+
+
+  /**
+   * Reference to a field of type 'DateTime[]'
+   */
+  export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
     
 
 
@@ -5989,7 +6039,7 @@ export namespace Prisma {
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
-    id?: StringFilter<"User"> | string
+    id?: IntFilter<"User"> | number
     walletAddress?: StringFilter<"User"> | string
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
@@ -6005,7 +6055,7 @@ export namespace Prisma {
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
+    id?: number
     walletAddress?: string
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
@@ -6021,15 +6071,17 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
+    _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
+    _sum?: UserSumOrderByAggregateInput
   }
 
   export type UserScalarWhereWithAggregatesInput = {
     AND?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
     OR?: UserScalarWhereWithAggregatesInput[]
     NOT?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"User"> | string
+    id?: IntWithAggregatesFilter<"User"> | number
     walletAddress?: StringWithAggregatesFilter<"User"> | string
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
@@ -6039,7 +6091,7 @@ export namespace Prisma {
     AND?: PlanWhereInput | PlanWhereInput[]
     OR?: PlanWhereInput[]
     NOT?: PlanWhereInput | PlanWhereInput[]
-    id?: StringFilter<"Plan"> | string
+    id?: IntFilter<"Plan"> | number
     name?: StringFilter<"Plan"> | string
     displayName?: StringFilter<"Plan"> | string
     duration?: IntFilter<"Plan"> | number
@@ -6071,7 +6123,7 @@ export namespace Prisma {
   }
 
   export type PlanWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
+    id?: number
     name?: string
     AND?: PlanWhereInput | PlanWhereInput[]
     OR?: PlanWhereInput[]
@@ -6113,7 +6165,7 @@ export namespace Prisma {
     AND?: PlanScalarWhereWithAggregatesInput | PlanScalarWhereWithAggregatesInput[]
     OR?: PlanScalarWhereWithAggregatesInput[]
     NOT?: PlanScalarWhereWithAggregatesInput | PlanScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"Plan"> | string
+    id?: IntWithAggregatesFilter<"Plan"> | number
     name?: StringWithAggregatesFilter<"Plan"> | string
     displayName?: StringWithAggregatesFilter<"Plan"> | string
     duration?: IntWithAggregatesFilter<"Plan"> | number
@@ -6131,9 +6183,9 @@ export namespace Prisma {
     AND?: SubscriptionWhereInput | SubscriptionWhereInput[]
     OR?: SubscriptionWhereInput[]
     NOT?: SubscriptionWhereInput | SubscriptionWhereInput[]
-    id?: StringFilter<"Subscription"> | string
-    userId?: StringFilter<"Subscription"> | string
-    planId?: StringFilter<"Subscription"> | string
+    id?: IntFilter<"Subscription"> | number
+    userId?: IntFilter<"Subscription"> | number
+    planId?: IntFilter<"Subscription"> | number
     token?: StringFilter<"Subscription"> | string
     status?: StringFilter<"Subscription"> | string
     purchasePrice?: FloatFilter<"Subscription"> | number
@@ -6163,12 +6215,12 @@ export namespace Prisma {
   }
 
   export type SubscriptionWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
+    id?: number
     AND?: SubscriptionWhereInput | SubscriptionWhereInput[]
     OR?: SubscriptionWhereInput[]
     NOT?: SubscriptionWhereInput | SubscriptionWhereInput[]
-    userId?: StringFilter<"Subscription"> | string
-    planId?: StringFilter<"Subscription"> | string
+    userId?: IntFilter<"Subscription"> | number
+    planId?: IntFilter<"Subscription"> | number
     token?: StringFilter<"Subscription"> | string
     status?: StringFilter<"Subscription"> | string
     purchasePrice?: FloatFilter<"Subscription"> | number
@@ -6204,9 +6256,9 @@ export namespace Prisma {
     AND?: SubscriptionScalarWhereWithAggregatesInput | SubscriptionScalarWhereWithAggregatesInput[]
     OR?: SubscriptionScalarWhereWithAggregatesInput[]
     NOT?: SubscriptionScalarWhereWithAggregatesInput | SubscriptionScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"Subscription"> | string
-    userId?: StringWithAggregatesFilter<"Subscription"> | string
-    planId?: StringWithAggregatesFilter<"Subscription"> | string
+    id?: IntWithAggregatesFilter<"Subscription"> | number
+    userId?: IntWithAggregatesFilter<"Subscription"> | number
+    planId?: IntWithAggregatesFilter<"Subscription"> | number
     token?: StringWithAggregatesFilter<"Subscription"> | string
     status?: StringWithAggregatesFilter<"Subscription"> | string
     purchasePrice?: FloatWithAggregatesFilter<"Subscription"> | number
@@ -6302,7 +6354,6 @@ export namespace Prisma {
   }
 
   export type UserCreateInput = {
-    id?: string
     walletAddress: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -6310,7 +6361,7 @@ export namespace Prisma {
   }
 
   export type UserUncheckedCreateInput = {
-    id?: string
+    id?: number
     walletAddress: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -6318,7 +6369,6 @@ export namespace Prisma {
   }
 
   export type UserUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
     walletAddress?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -6326,7 +6376,7 @@ export namespace Prisma {
   }
 
   export type UserUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: IntFieldUpdateOperationsInput | number
     walletAddress?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -6334,28 +6384,26 @@ export namespace Prisma {
   }
 
   export type UserCreateManyInput = {
-    id?: string
+    id?: number
     walletAddress: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type UserUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
     walletAddress?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: IntFieldUpdateOperationsInput | number
     walletAddress?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PlanCreateInput = {
-    id?: string
     name: string
     displayName: string
     duration: number
@@ -6371,7 +6419,7 @@ export namespace Prisma {
   }
 
   export type PlanUncheckedCreateInput = {
-    id?: string
+    id?: number
     name: string
     displayName: string
     duration: number
@@ -6387,7 +6435,6 @@ export namespace Prisma {
   }
 
   export type PlanUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     displayName?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
@@ -6403,7 +6450,7 @@ export namespace Prisma {
   }
 
   export type PlanUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     displayName?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
@@ -6419,7 +6466,7 @@ export namespace Prisma {
   }
 
   export type PlanCreateManyInput = {
-    id?: string
+    id?: number
     name: string
     displayName: string
     duration: number
@@ -6434,7 +6481,6 @@ export namespace Prisma {
   }
 
   export type PlanUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     displayName?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
@@ -6449,7 +6495,7 @@ export namespace Prisma {
   }
 
   export type PlanUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     displayName?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
@@ -6464,7 +6510,6 @@ export namespace Prisma {
   }
 
   export type SubscriptionCreateInput = {
-    id?: string
     token: string
     status: string
     purchasePrice: number
@@ -6478,9 +6523,9 @@ export namespace Prisma {
   }
 
   export type SubscriptionUncheckedCreateInput = {
-    id?: string
-    userId: string
-    planId: string
+    id?: number
+    userId: number
+    planId: number
     token: string
     status: string
     purchasePrice: number
@@ -6492,7 +6537,6 @@ export namespace Prisma {
   }
 
   export type SubscriptionUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
     token?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     purchasePrice?: FloatFieldUpdateOperationsInput | number
@@ -6506,9 +6550,9 @@ export namespace Prisma {
   }
 
   export type SubscriptionUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    planId?: StringFieldUpdateOperationsInput | string
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    planId?: IntFieldUpdateOperationsInput | number
     token?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     purchasePrice?: FloatFieldUpdateOperationsInput | number
@@ -6520,9 +6564,9 @@ export namespace Prisma {
   }
 
   export type SubscriptionCreateManyInput = {
-    id?: string
-    userId: string
-    planId: string
+    id?: number
+    userId: number
+    planId: number
     token: string
     status: string
     purchasePrice: number
@@ -6534,7 +6578,6 @@ export namespace Prisma {
   }
 
   export type SubscriptionUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
     token?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     purchasePrice?: FloatFieldUpdateOperationsInput | number
@@ -6546,9 +6589,9 @@ export namespace Prisma {
   }
 
   export type SubscriptionUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    planId?: StringFieldUpdateOperationsInput | string
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    planId?: IntFieldUpdateOperationsInput | number
     token?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     purchasePrice?: FloatFieldUpdateOperationsInput | number
@@ -6726,6 +6769,17 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -6754,6 +6808,10 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type UserAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
   export type UserMaxOrderByAggregateInput = {
     id?: SortOrder
     walletAddress?: SortOrder
@@ -6768,6 +6826,26 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type UserSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -6780,17 +6858,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type FloatNullableFilter<$PrismaModel = never> = {
@@ -6836,6 +6903,7 @@ export namespace Prisma {
   }
 
   export type PlanAvgOrderByAggregateInput = {
+    id?: SortOrder
     duration?: SortOrder
     price?: SortOrder
     salePrice?: SortOrder
@@ -6872,25 +6940,10 @@ export namespace Prisma {
   }
 
   export type PlanSumOrderByAggregateInput = {
+    id?: SortOrder
     duration?: SortOrder
     price?: SortOrder
     salePrice?: SortOrder
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -6956,6 +7009,9 @@ export namespace Prisma {
   }
 
   export type SubscriptionAvgOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    planId?: SortOrder
     purchasePrice?: SortOrder
   }
 
@@ -6988,6 +7044,9 @@ export namespace Prisma {
   }
 
   export type SubscriptionSumOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    planId?: SortOrder
     purchasePrice?: SortOrder
   }
 
@@ -7052,6 +7111,14 @@ export namespace Prisma {
     deleteMany?: SubscriptionScalarWhereInput | SubscriptionScalarWhereInput[]
   }
 
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type SubscriptionUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<SubscriptionCreateWithoutUserInput, SubscriptionUncheckedCreateWithoutUserInput> | SubscriptionCreateWithoutUserInput[] | SubscriptionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SubscriptionCreateOrConnectWithoutUserInput | SubscriptionCreateOrConnectWithoutUserInput[]
@@ -7078,14 +7145,6 @@ export namespace Prisma {
     connectOrCreate?: SubscriptionCreateOrConnectWithoutPlanInput | SubscriptionCreateOrConnectWithoutPlanInput[]
     createMany?: SubscriptionCreateManyPlanInputEnvelope
     connect?: SubscriptionWhereUniqueInput | SubscriptionWhereUniqueInput[]
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type NullableFloatFieldUpdateOperationsInput = {
@@ -7299,6 +7358,22 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -7340,22 +7415,6 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
-  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
-  }
-
   export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel> | null
     in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
@@ -7395,7 +7454,6 @@ export namespace Prisma {
   }
 
   export type SubscriptionCreateWithoutUserInput = {
-    id?: string
     token: string
     status: string
     purchasePrice: number
@@ -7408,8 +7466,8 @@ export namespace Prisma {
   }
 
   export type SubscriptionUncheckedCreateWithoutUserInput = {
-    id?: string
-    planId: string
+    id?: number
+    planId: number
     token: string
     status: string
     purchasePrice: number
@@ -7450,9 +7508,9 @@ export namespace Prisma {
     AND?: SubscriptionScalarWhereInput | SubscriptionScalarWhereInput[]
     OR?: SubscriptionScalarWhereInput[]
     NOT?: SubscriptionScalarWhereInput | SubscriptionScalarWhereInput[]
-    id?: StringFilter<"Subscription"> | string
-    userId?: StringFilter<"Subscription"> | string
-    planId?: StringFilter<"Subscription"> | string
+    id?: IntFilter<"Subscription"> | number
+    userId?: IntFilter<"Subscription"> | number
+    planId?: IntFilter<"Subscription"> | number
     token?: StringFilter<"Subscription"> | string
     status?: StringFilter<"Subscription"> | string
     purchasePrice?: FloatFilter<"Subscription"> | number
@@ -7464,7 +7522,6 @@ export namespace Prisma {
   }
 
   export type SubscriptionCreateWithoutPlanInput = {
-    id?: string
     token: string
     status: string
     purchasePrice: number
@@ -7477,8 +7534,8 @@ export namespace Prisma {
   }
 
   export type SubscriptionUncheckedCreateWithoutPlanInput = {
-    id?: string
-    userId: string
+    id?: number
+    userId: number
     token: string
     status: string
     purchasePrice: number
@@ -7516,14 +7573,13 @@ export namespace Prisma {
   }
 
   export type UserCreateWithoutSubscriptionsInput = {
-    id?: string
     walletAddress: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type UserUncheckedCreateWithoutSubscriptionsInput = {
-    id?: string
+    id?: number
     walletAddress: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -7535,7 +7591,6 @@ export namespace Prisma {
   }
 
   export type PlanCreateWithoutSubscriptionsInput = {
-    id?: string
     name: string
     displayName: string
     duration: number
@@ -7550,7 +7605,7 @@ export namespace Prisma {
   }
 
   export type PlanUncheckedCreateWithoutSubscriptionsInput = {
-    id?: string
+    id?: number
     name: string
     displayName: string
     duration: number
@@ -7581,14 +7636,13 @@ export namespace Prisma {
   }
 
   export type UserUpdateWithoutSubscriptionsInput = {
-    id?: StringFieldUpdateOperationsInput | string
     walletAddress?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserUncheckedUpdateWithoutSubscriptionsInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: IntFieldUpdateOperationsInput | number
     walletAddress?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7606,7 +7660,6 @@ export namespace Prisma {
   }
 
   export type PlanUpdateWithoutSubscriptionsInput = {
-    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     displayName?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
@@ -7621,7 +7674,7 @@ export namespace Prisma {
   }
 
   export type PlanUncheckedUpdateWithoutSubscriptionsInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     displayName?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
@@ -7636,8 +7689,8 @@ export namespace Prisma {
   }
 
   export type SubscriptionCreateManyUserInput = {
-    id?: string
-    planId: string
+    id?: number
+    planId: number
     token: string
     status: string
     purchasePrice: number
@@ -7649,7 +7702,6 @@ export namespace Prisma {
   }
 
   export type SubscriptionUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
     token?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     purchasePrice?: FloatFieldUpdateOperationsInput | number
@@ -7662,8 +7714,8 @@ export namespace Prisma {
   }
 
   export type SubscriptionUncheckedUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    planId?: StringFieldUpdateOperationsInput | string
+    id?: IntFieldUpdateOperationsInput | number
+    planId?: IntFieldUpdateOperationsInput | number
     token?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     purchasePrice?: FloatFieldUpdateOperationsInput | number
@@ -7675,8 +7727,8 @@ export namespace Prisma {
   }
 
   export type SubscriptionUncheckedUpdateManyWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    planId?: StringFieldUpdateOperationsInput | string
+    id?: IntFieldUpdateOperationsInput | number
+    planId?: IntFieldUpdateOperationsInput | number
     token?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     purchasePrice?: FloatFieldUpdateOperationsInput | number
@@ -7688,8 +7740,8 @@ export namespace Prisma {
   }
 
   export type SubscriptionCreateManyPlanInput = {
-    id?: string
-    userId: string
+    id?: number
+    userId: number
     token: string
     status: string
     purchasePrice: number
@@ -7701,7 +7753,6 @@ export namespace Prisma {
   }
 
   export type SubscriptionUpdateWithoutPlanInput = {
-    id?: StringFieldUpdateOperationsInput | string
     token?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     purchasePrice?: FloatFieldUpdateOperationsInput | number
@@ -7714,8 +7765,8 @@ export namespace Prisma {
   }
 
   export type SubscriptionUncheckedUpdateWithoutPlanInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
     token?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     purchasePrice?: FloatFieldUpdateOperationsInput | number
@@ -7727,8 +7778,8 @@ export namespace Prisma {
   }
 
   export type SubscriptionUncheckedUpdateManyWithoutPlanInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
     token?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     purchasePrice?: FloatFieldUpdateOperationsInput | number

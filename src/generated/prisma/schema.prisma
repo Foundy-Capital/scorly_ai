@@ -30,7 +30,7 @@ model ScoredAsset {
 }
 
 model User {
-  id            String   @id @default(cuid())
+  id            Int      @id @default(autoincrement())
   walletAddress String   @unique
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
@@ -41,7 +41,7 @@ model User {
 }
 
 model Plan {
-  id          String    @id @default(cuid())
+  id          Int       @id @default(autoincrement())
   name        String    @unique // 'monthly', 'quarterly', 'yearly'
   displayName String // 'Monthly Access', 'Quarterly Access', 'Yearly Access'
   duration    Int // days: 30, 90, 365
@@ -60,11 +60,11 @@ model Plan {
 }
 
 model Subscription {
-  id     String @id @default(cuid())
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  planId String
-  plan   Plan   @relation(fields: [planId], references: [id])
+  id     Int  @id @default(autoincrement())
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planId Int
+  plan   Plan @relation(fields: [planId], references: [id])
 
   token         String // 'USDT', 'USDC', 'SCOR'
   status        String // 'active', 'expired', 'revoked'
