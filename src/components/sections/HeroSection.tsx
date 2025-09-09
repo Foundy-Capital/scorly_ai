@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { Section, Container } from '@/components/ui/Layout';
 
@@ -17,6 +18,11 @@ export function HeroSection() {
           <p className="mt-6 text-lg leading-8 text-neutral-600 dark:text-neutral-300">
             Upload project data or paste a link.<br />Get a&nbsp;full audit-style score and&nbsp;risk report powered by&nbsp;AI.
           </p>
+          <div className="mt-8">
+            <Link href="/scores">
+              <Button>View Scored Assets</Button>
+            </Link>
+          </div>
         </div>
       </Container>
     </Section>

@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum CategoryType {
+  real_estate
+  credit
+  commodities
+  other
+}
+
+model ScoredAsset {
+  id                Int          @id @default(autoincrement())
+  token_symbol      String
+  issuer            String
+  category          CategoryType
+  chain             String
+  total_score       Float
+  liquidity_tvl_usd Float
+  risk_flags        String[]
+  description       String?
+  full_text         String?
+  url               String?
+
+  @@map("scored_assets")
+}
+
+model User {
+  id            Int      @id @default(autoincrement())
+  walletAddress String   @unique
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  subscriptions Subscription[]
+
+  @@map("users")
+}
+
+model Plan {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique // 'monthly', 'quarterly', 'yearly'
+  displayName String // 'Monthly Access', 'Quarterly Access', 'Yearly Access'
+  duration    Int // days: 30, 90, 365
+  price       Float // regular price in USD
+  salePrice   Float? // discounted price (null if no sale)
+  saleStart   DateTime? // when sale begins
+  saleEnd     DateTime? // when sale ends
+  tier        String // 'scor_access_pass'
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  subscriptions Subscription[]
+
+  @@map("plans")
+}
+
+model Subscription {
+  id     Int  @id @default(autoincrement())
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planId Int
+  plan   Plan @relation(fields: [planId], references: [id])
+
+  token         String // 'USDT', 'USDC', 'SCOR'
+  status        String // 'active', 'expired', 'revoked'
+  purchasePrice Float // actual price paid (handles sale pricing)
+
+  startedAt DateTime
+  expiresAt DateTime
+  txHash    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("subscriptions")
+}

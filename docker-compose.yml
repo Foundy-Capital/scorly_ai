@@ -1,4 +1,7 @@
-name: scorlyai-front
+name: scorly
+
+volumes:
+  postgres_data:
 
 networks:
   scorly-network:
@@ -6,8 +9,30 @@ networks:
     name: scorly-network
 
 services:
+  postgres:
+      image: postgres:17.6
+      container_name: scorly_postgres
+      hostname: postgres-service
+      restart: unless-stopped
+      command: -p 5432
+      healthcheck:
+        test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USERNAME} -d ${POSTGRES_DATABASE_NAME}" ]
+        interval: 5s
+        timeout: 5s
+        retries: 10
+      environment:
+        POSTGRES_DB: ${POSTGRES_DATABASE_NAME}
+        POSTGRES_USER: ${POSTGRES_USERNAME}
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      networks:
+        - scorly-network
+      ports:
+        - 5432:5432
+      volumes:
+        - postgres_data:/var/lib/postgresql/data
   nextjs:
     build: .
+    container_name: scorly_app
     ports:
       - ${APP_PORT_EXPOSE}:3000
     command: pm2-runtime npm -- start
