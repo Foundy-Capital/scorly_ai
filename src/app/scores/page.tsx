@@ -28,6 +28,9 @@ function ScoresPage() {
     minScore: 0,
     minTVL: 0,
   })
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false)
+  const [selectedAsset, setSelectedAsset] = useState<ScoredAsset | null>(null)
+  const [assetDetails, setAssetDetails] = useState<any>(null)
 
   const { openPaywall } = useModal()
   const { address } = useAccount()
@@ -95,6 +98,41 @@ function ScoresPage() {
 
   const handleFilterChange = (key: keyof Filters, value: string | number) => {
     setFilters((prev) => ({ ...prev, [key]: value }))
+  }
+
+  const handleOpenDetails = async (asset: ScoredAsset) => {
+    setSelectedAsset(asset)
+
+    // If asset already has full_text, parse it directly
+    if (asset.full_text) {
+      try {
+        const analysis = JSON.parse(asset.full_text)
+        setAssetDetails(analysis)
+      } catch (error) {
+        console.error('Error parsing stored analysis:', error)
+      }
+    } else if (asset.url) {
+      // Fallback: fetch from API if no full_text
+      try {
+        const response = await fetch(`/api/scores/check-url?url=${encodeURIComponent(asset.url)}`)
+        if (response.ok) {
+          const data = await response.json()
+          if (data.found && data.analysis) {
+            setAssetDetails(data.analysis)
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching asset details:', error)
+      }
+    }
+
+    setIsDetailModalOpen(true)
+  }
+
+  const handleCloseDetails = () => {
+    setIsDetailModalOpen(false)
+    setSelectedAsset(null)
+    setAssetDetails(null)
   }
 
   return (
@@ -188,11 +226,121 @@ function ScoresPage() {
                   <td className="py-2 px-4 border">{asset.total_score}</td>
                   <td className="py-2 px-4 border">{asset.liquidity_tvl_usd.toLocaleString()}</td>
                   <td className="py-2 px-4 border">{asset.risk_flags.join(', ')}</td>
-                  <td className="py-2 px-4 border"><a>Open</a></td>
+                  <td className="py-2 px-4 border">
+                    <button
+                      onClick={() => handleOpenDetails(asset)}
+                      className="text-blue-600 hover:text-blue-800 underline"
+                    >
+                      Open
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {/* Detail Modal */}
+      {isDetailModalOpen && selectedAsset && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white w-full h-full relative overflow-auto">
+            <button
+              onClick={handleCloseDetails}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl z-10"
+            >
+              ×
+            </button>
+            <div className="p-6">
+              <h2 className="text-2xl font-bold mb-4">Full Analysis Report</h2>
+              {assetDetails ? (
+                <div className="space-y-6">
+                  {/* Asset Details */}
+                  <div>
+                    <h3 className="text-lg font-semibold mb-2 border-b pb-2">Asset Details</h3>
+                    <div className="grid grid-cols-2 gap-2 text-sm">
+                      <p><strong>Asset:</strong> {assetDetails.asset_name}</p>
+                      <p><strong>Token:</strong> {assetDetails.token}</p>
+                      <p><strong>Type:</strong> {assetDetails.asset_type}</p>
+                      <p><strong>Issuer:</strong> {assetDetails.issuer}</p>
+                      <p><strong>Chain:</strong> {assetDetails.chain}</p>
+                    </div>
+                  </div>
+
+                  {/* Index Inclusion Score */}
+                  <div>
+                    <h3 className="text-lg font-semibold mb-2 border-b pb-2">Index Inclusion Score</h3>
+                    <div className="flex items-center gap-4">
+                      <p className="font-semibold text-lg">{assetDetails.index_inclusion_score.eligibility}</p>
+                      <p className={`font-semibold text-lg ${
+                        assetDetails.index_inclusion_score.score_percent > 80
+                          ? 'text-green-500'
+                          : assetDetails.index_inclusion_score.score_percent > 50
+                          ? 'text-yellow-500'
+                          : 'text-red-500'
+                      }`}>
+                        Score: {assetDetails.index_inclusion_score.score_percent}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Key Highlights */}
+                  <div>
+                    <h3 className="text-lg font-semibold mb-2 border-b pb-2">Key Highlights</h3>
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <h4 className="font-semibold mb-1">Top Strengths</h4>
+                        <ul className="list-disc list-inside">
+                          {assetDetails.key_highlights.top_strengths.map((s: string, i: number) => <li key={i}>{s}</li>)}
+                        </ul>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold mb-1">Key Risks</h4>
+                        <ul className="list-disc list-inside">
+                          {assetDetails.key_highlights.key_risks.map((r: string, i: number) => <li key={i}>{r}</li>)}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Risk Analysis */}
+                  <div>
+                    <h3 className="text-lg font-semibold mb-2 border-b pb-2">Risk Analysis</h3>
+                    <div className="space-y-2 text-sm">
+                      <p><strong>Regulatory:</strong> {assetDetails.risk_analysis.regulatory}</p>
+                      <p><strong>Custody:</strong> {assetDetails.risk_analysis.custody}</p>
+                      <p><strong>Oracle/Data:</strong> {assetDetails.risk_analysis.oracle_data}</p>
+                      <p><strong>Redemption:</strong> {assetDetails.risk_analysis.redemption}</p>
+                      <p><strong>Token Design:</strong> {assetDetails.risk_analysis.token_design}</p>
+                    </div>
+                  </div>
+
+                  {/* Final Verdict */}
+                  <div>
+                    <h3 className="text-lg font-semibold mb-2 border-b pb-2">Final Verdict</h3>
+                    <div className="p-4 rounded-lg bg-gray-100">
+                      <p className="font-bold text-lg mb-2">{assetDetails.final_verdict.decision}</p>
+                      <ul className="list-disc list-inside text-sm">
+                        {assetDetails.final_verdict.reasoning.map((r: string, i: number) => <li key={i}>{r}</li>)}
+                      </ul>
+                    </div>
+                  </div>
+
+                  {/* Documents */}
+                  <div>
+                    <h3 className="text-lg font-semibold mb-2 border-b pb-2">Documents</h3>
+                    <div className="p-4 rounded-lg bg-gray-100">
+                      <p><strong>All Documents:</strong> <a target='_blank' href={assetDetails.all_documents} className="text-blue-600 hover:underline">Open Dropbox</a></p>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <p className="text-gray-500">Loading analysis details...</p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       )}
     </div>
