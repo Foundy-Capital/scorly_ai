@@ -161,13 +161,7 @@ export async function POST(req: NextRequest) {
     // Store the analysis in the database if it's an initial analysis
     if (isInitialAnalysis && analysisData) {
       try {
-        const categoryMap: { [key: string]: string } = {
-          'real estate': 'real_estate',
-          'credit': 'credit',
-          'commodities': 'commodities',
-          'other': 'other',
-        };
-        const category = categoryMap[analysisData.asset_type.toLowerCase()] || 'other';
+        const category = analysisData.category
 
         await prisma.scoredAsset.create({
           data: {
