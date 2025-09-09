@@ -1,27 +1,15 @@
 'use client';
 
-import Image from 'next/image'
-import { useAccount, useDisconnect, useConnect } from 'wagmi'
+import { useAccount, useDisconnect } from 'wagmi'
 import { Wallet } from './ui/icons'
-import { base } from 'wagmi/chains'
 import { useEffect, useState } from 'react'
-
-import { config } from '@/config/web3'
-
-const chains = config.chains
+import { WalletConnectModal } from './WalletConnectModal'
 
 export function Account() {
   const { disconnect } = useDisconnect()
   const { address, isConnected } = useAccount()
-  const { connectAsync, connectors } = useConnect()
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedChainId, setSelectedChainId] = useState(base.id)
   const [isLoadingUser, setIsLoadingUser] = useState(false)
-
-  useEffect(() => {
-    // Set default chain on mount, you can change this to your preferred default
-    setSelectedChainId(base.id)
-  }, [])
 
   // Call /api/auth/user when wallet connects
   useEffect(() => {
@@ -57,22 +45,8 @@ export function Account() {
     }
   }
 
-  async function handleConnect(connector: any) {
-    await connectAsync({
-      chainId: selectedChainId,
-      connector,
-    })
+  const handleWalletConnect = () => {
     setIsModalOpen(false)
-  }
-
-  const getConnectorIcon = (connectorName: string) => {
-    if (connectorName.toLowerCase().includes('metamask')) {
-      return '/MetaMask.svg'
-    }
-    if (connectorName.toLowerCase().includes('walletconnect')) {
-      return '/WalletConnect.png'
-    }
-    return '/favicon.svg' // A default icon
   }
 
   return (
@@ -99,47 +73,11 @@ export function Account() {
         </button>
       )}
 
-      {isModalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-          onClick={() => setIsModalOpen(false)}
-        >
-          <div
-            className="bg-white rounded-lg p-6 shadow-lg w-full max-w-sm text-gray-900"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold">Connect Wallet</h2>
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="text-gray-500 hover:text-gray-700 text-2xl leading-none"
-              >
-                &times;
-              </button>
-            </div>
-
-            {/* Wallet Connector List */}
-            <div className="flex flex-col gap-3">
-              {connectors.map((connector) => (
-                <button
-                  key={connector.id}
-                  onClick={() => handleConnect(connector)}
-                  className="flex items-center justify-start gap-3 px-4 py-3 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors text-lg font-medium"
-                >
-                  <Image
-                    src={getConnectorIcon(connector.name)}
-                    alt={connector.name}
-                    width={24}
-                    height={24}
-                    className="w-6 h-6"
-                  />
-                  <span>{connector.name}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+      <WalletConnectModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConnect={handleWalletConnect}
+      />
     </>
   )
 }
