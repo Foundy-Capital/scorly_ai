@@ -4,6 +4,7 @@ import { Coins } from '@/components/ui/icons';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useAccount } from 'wagmi';
+import { useState, useEffect } from 'react';
 
 // Dynamically import Account component to prevent hydration mismatch
 const Account = dynamic(() => import('@/components/Account').then(mod => ({ default: mod.Account })), {
@@ -18,6 +19,11 @@ const Account = dynamic(() => import('@/components/Account').then(mod => ({ defa
 
 export function Header() {
   const { address } = useAccount();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   return (
     <header className="bg-white shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -32,10 +38,16 @@ export function Header() {
             </div>
           </Link>
 
-          <nav className="flex gap-4">
-            {address && <Link href="/scores" className="text-gray-700 hover:text-gray-900">Scores</Link>}
-            <Link href="/plans" className="text-gray-700 hover:text-gray-900">Plans</Link>
-          </nav>
+          {mounted ? (
+            <nav className="flex gap-4">
+              {address && <Link href="/scores" className="text-gray-700 hover:text-gray-900">Scores</Link>}
+              <Link href="/plans" className="text-gray-700 hover:text-gray-900">Plans</Link>
+            </nav>
+          ) : (
+            <nav className="flex gap-4">
+              <Link href="/plans" className="text-gray-700 hover:text-gray-900">Plans</Link>
+            </nav>
+          )}
 
           <Account />
         </div>
