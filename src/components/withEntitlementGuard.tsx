@@ -23,7 +23,7 @@ export function withEntitlementGuard<T extends {}>(WrappedComponent: ComponentTy
     useEffect(() => {
       const checkEntitlement = async () => {
         if (!isConnected || !address) {
-          openPaywall();
+          router.push('/');
           setIsLoading(false);
           return;
         }
