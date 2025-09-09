@@ -129,7 +129,9 @@ exports.Prisma.ScoredAssetScalarFieldEnum = {
   total_score: 'total_score',
   liquidity_tvl_usd: 'liquidity_tvl_usd',
   risk_flags: 'risk_flags',
-  description: 'description'
+  description: 'description',
+  full_text: 'full_text',
+  url: 'url'
 };
 
 exports.Prisma.UserScalarFieldEnum = {

@@ -16,7 +16,7 @@ enum CategoryType {
 }
 
 model ScoredAsset {
-  id                String       @id @default(cuid())
+  id                Int       @id @default(autoincrement())
   token_symbol      String
   issuer            String
   category          CategoryType
@@ -25,6 +25,8 @@ model ScoredAsset {
   liquidity_tvl_usd Float
   risk_flags        String[]
   description       String?
+  full_text         String?
+  url               String?
 
   @@map("scored_assets")
 }

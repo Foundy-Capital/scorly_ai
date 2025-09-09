@@ -1222,17 +1222,19 @@ export namespace Prisma {
   }
 
   export type ScoredAssetAvgAggregateOutputType = {
+    id: number | null
     total_score: number | null
     liquidity_tvl_usd: number | null
   }
 
   export type ScoredAssetSumAggregateOutputType = {
+    id: number | null
     total_score: number | null
     liquidity_tvl_usd: number | null
   }
 
   export type ScoredAssetMinAggregateOutputType = {
-    id: string | null
+    id: number | null
     token_symbol: string | null
     issuer: string | null
     category: $Enums.CategoryType | null
@@ -1240,10 +1242,12 @@ export namespace Prisma {
     total_score: number | null
     liquidity_tvl_usd: number | null
     description: string | null
+    full_text: string | null
+    url: string | null
   }
 
   export type ScoredAssetMaxAggregateOutputType = {
-    id: string | null
+    id: number | null
     token_symbol: string | null
     issuer: string | null
     category: $Enums.CategoryType | null
@@ -1251,6 +1255,8 @@ export namespace Prisma {
     total_score: number | null
     liquidity_tvl_usd: number | null
     description: string | null
+    full_text: string | null
+    url: string | null
   }
 
   export type ScoredAssetCountAggregateOutputType = {
@@ -1263,16 +1269,20 @@ export namespace Prisma {
     liquidity_tvl_usd: number
     risk_flags: number
     description: number
+    full_text: number
+    url: number
     _all: number
   }
 
 
   export type ScoredAssetAvgAggregateInputType = {
+    id?: true
     total_score?: true
     liquidity_tvl_usd?: true
   }
 
   export type ScoredAssetSumAggregateInputType = {
+    id?: true
     total_score?: true
     liquidity_tvl_usd?: true
   }
@@ -1286,6 +1296,8 @@ export namespace Prisma {
     total_score?: true
     liquidity_tvl_usd?: true
     description?: true
+    full_text?: true
+    url?: true
   }
 
   export type ScoredAssetMaxAggregateInputType = {
@@ -1297,6 +1309,8 @@ export namespace Prisma {
     total_score?: true
     liquidity_tvl_usd?: true
     description?: true
+    full_text?: true
+    url?: true
   }
 
   export type ScoredAssetCountAggregateInputType = {
@@ -1309,6 +1323,8 @@ export namespace Prisma {
     liquidity_tvl_usd?: true
     risk_flags?: true
     description?: true
+    full_text?: true
+    url?: true
     _all?: true
   }
 
@@ -1399,7 +1415,7 @@ export namespace Prisma {
   }
 
   export type ScoredAssetGroupByOutputType = {
-    id: string
+    id: number
     token_symbol: string
     issuer: string
     category: $Enums.CategoryType
@@ -1408,6 +1424,8 @@ export namespace Prisma {
     liquidity_tvl_usd: number
     risk_flags: string[]
     description: string | null
+    full_text: string | null
+    url: string | null
     _count: ScoredAssetCountAggregateOutputType | null
     _avg: ScoredAssetAvgAggregateOutputType | null
     _sum: ScoredAssetSumAggregateOutputType | null
@@ -1439,6 +1457,8 @@ export namespace Prisma {
     liquidity_tvl_usd?: boolean
     risk_flags?: boolean
     description?: boolean
+    full_text?: boolean
+    url?: boolean
   }, ExtArgs["result"]["scoredAsset"]>
 
   export type ScoredAssetSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1451,6 +1471,8 @@ export namespace Prisma {
     liquidity_tvl_usd?: boolean
     risk_flags?: boolean
     description?: boolean
+    full_text?: boolean
+    url?: boolean
   }, ExtArgs["result"]["scoredAsset"]>
 
   export type ScoredAssetSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1463,6 +1485,8 @@ export namespace Prisma {
     liquidity_tvl_usd?: boolean
     risk_flags?: boolean
     description?: boolean
+    full_text?: boolean
+    url?: boolean
   }, ExtArgs["result"]["scoredAsset"]>
 
   export type ScoredAssetSelectScalar = {
@@ -1475,15 +1499,17 @@ export namespace Prisma {
     liquidity_tvl_usd?: boolean
     risk_flags?: boolean
     description?: boolean
+    full_text?: boolean
+    url?: boolean
   }
 
-  export type ScoredAssetOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "token_symbol" | "issuer" | "category" | "chain" | "total_score" | "liquidity_tvl_usd" | "risk_flags" | "description", ExtArgs["result"]["scoredAsset"]>
+  export type ScoredAssetOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "token_symbol" | "issuer" | "category" | "chain" | "total_score" | "liquidity_tvl_usd" | "risk_flags" | "description" | "full_text" | "url", ExtArgs["result"]["scoredAsset"]>
 
   export type $ScoredAssetPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ScoredAsset"
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
-      id: string
+      id: number
       token_symbol: string
       issuer: string
       category: $Enums.CategoryType
@@ -1492,6 +1518,8 @@ export namespace Prisma {
       liquidity_tvl_usd: number
       risk_flags: string[]
       description: string | null
+      full_text: string | null
+      url: string | null
     }, ExtArgs["result"]["scoredAsset"]>
     composites: {}
   }
@@ -1915,7 +1943,7 @@ export namespace Prisma {
    * Fields of the ScoredAsset model
    */
   interface ScoredAssetFieldRefs {
-    readonly id: FieldRef<"ScoredAsset", 'String'>
+    readonly id: FieldRef<"ScoredAsset", 'Int'>
     readonly token_symbol: FieldRef<"ScoredAsset", 'String'>
     readonly issuer: FieldRef<"ScoredAsset", 'String'>
     readonly category: FieldRef<"ScoredAsset", 'CategoryType'>
@@ -1924,6 +1952,8 @@ export namespace Prisma {
     readonly liquidity_tvl_usd: FieldRef<"ScoredAsset", 'Float'>
     readonly risk_flags: FieldRef<"ScoredAsset", 'String[]'>
     readonly description: FieldRef<"ScoredAsset", 'String'>
+    readonly full_text: FieldRef<"ScoredAsset", 'String'>
+    readonly url: FieldRef<"ScoredAsset", 'String'>
   }
     
 
@@ -5801,7 +5831,9 @@ export namespace Prisma {
     total_score: 'total_score',
     liquidity_tvl_usd: 'liquidity_tvl_usd',
     risk_flags: 'risk_flags',
-    description: 'description'
+    description: 'description',
+    full_text: 'full_text',
+    url: 'url'
   };
 
   export type ScoredAssetScalarFieldEnum = (typeof ScoredAssetScalarFieldEnum)[keyof typeof ScoredAssetScalarFieldEnum]
@@ -5882,6 +5914,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Int'
+   */
+  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+  /**
+   * Reference to a field of type 'Int[]'
+   */
+  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
    * Reference to a field of type 'String'
    */
   export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String'>
@@ -5924,20 +5970,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Int'
-   */
-  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-  /**
-   * Reference to a field of type 'Int[]'
-   */
-  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
-
-
-  /**
    * Reference to a field of type 'DateTime'
    */
   export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -5965,7 +5997,7 @@ export namespace Prisma {
     AND?: ScoredAssetWhereInput | ScoredAssetWhereInput[]
     OR?: ScoredAssetWhereInput[]
     NOT?: ScoredAssetWhereInput | ScoredAssetWhereInput[]
-    id?: StringFilter<"ScoredAsset"> | string
+    id?: IntFilter<"ScoredAsset"> | number
     token_symbol?: StringFilter<"ScoredAsset"> | string
     issuer?: StringFilter<"ScoredAsset"> | string
     category?: EnumCategoryTypeFilter<"ScoredAsset"> | $Enums.CategoryType
@@ -5974,6 +6006,8 @@ export namespace Prisma {
     liquidity_tvl_usd?: FloatFilter<"ScoredAsset"> | number
     risk_flags?: StringNullableListFilter<"ScoredAsset">
     description?: StringNullableFilter<"ScoredAsset"> | string | null
+    full_text?: StringNullableFilter<"ScoredAsset"> | string | null
+    url?: StringNullableFilter<"ScoredAsset"> | string | null
   }
 
   export type ScoredAssetOrderByWithRelationInput = {
@@ -5986,10 +6020,12 @@ export namespace Prisma {
     liquidity_tvl_usd?: SortOrder
     risk_flags?: SortOrder
     description?: SortOrderInput | SortOrder
+    full_text?: SortOrderInput | SortOrder
+    url?: SortOrderInput | SortOrder
   }
 
   export type ScoredAssetWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
+    id?: number
     AND?: ScoredAssetWhereInput | ScoredAssetWhereInput[]
     OR?: ScoredAssetWhereInput[]
     NOT?: ScoredAssetWhereInput | ScoredAssetWhereInput[]
@@ -6001,6 +6037,8 @@ export namespace Prisma {
     liquidity_tvl_usd?: FloatFilter<"ScoredAsset"> | number
     risk_flags?: StringNullableListFilter<"ScoredAsset">
     description?: StringNullableFilter<"ScoredAsset"> | string | null
+    full_text?: StringNullableFilter<"ScoredAsset"> | string | null
+    url?: StringNullableFilter<"ScoredAsset"> | string | null
   }, "id">
 
   export type ScoredAssetOrderByWithAggregationInput = {
@@ -6013,6 +6051,8 @@ export namespace Prisma {
     liquidity_tvl_usd?: SortOrder
     risk_flags?: SortOrder
     description?: SortOrderInput | SortOrder
+    full_text?: SortOrderInput | SortOrder
+    url?: SortOrderInput | SortOrder
     _count?: ScoredAssetCountOrderByAggregateInput
     _avg?: ScoredAssetAvgOrderByAggregateInput
     _max?: ScoredAssetMaxOrderByAggregateInput
@@ -6024,7 +6064,7 @@ export namespace Prisma {
     AND?: ScoredAssetScalarWhereWithAggregatesInput | ScoredAssetScalarWhereWithAggregatesInput[]
     OR?: ScoredAssetScalarWhereWithAggregatesInput[]
     NOT?: ScoredAssetScalarWhereWithAggregatesInput | ScoredAssetScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"ScoredAsset"> | string
+    id?: IntWithAggregatesFilter<"ScoredAsset"> | number
     token_symbol?: StringWithAggregatesFilter<"ScoredAsset"> | string
     issuer?: StringWithAggregatesFilter<"ScoredAsset"> | string
     category?: EnumCategoryTypeWithAggregatesFilter<"ScoredAsset"> | $Enums.CategoryType
@@ -6033,6 +6073,8 @@ export namespace Prisma {
     liquidity_tvl_usd?: FloatWithAggregatesFilter<"ScoredAsset"> | number
     risk_flags?: StringNullableListFilter<"ScoredAsset">
     description?: StringNullableWithAggregatesFilter<"ScoredAsset"> | string | null
+    full_text?: StringNullableWithAggregatesFilter<"ScoredAsset"> | string | null
+    url?: StringNullableWithAggregatesFilter<"ScoredAsset"> | string | null
   }
 
   export type UserWhereInput = {
@@ -6270,7 +6312,6 @@ export namespace Prisma {
   }
 
   export type ScoredAssetCreateInput = {
-    id?: string
     token_symbol: string
     issuer: string
     category: $Enums.CategoryType
@@ -6279,10 +6320,12 @@ export namespace Prisma {
     liquidity_tvl_usd: number
     risk_flags?: ScoredAssetCreaterisk_flagsInput | string[]
     description?: string | null
+    full_text?: string | null
+    url?: string | null
   }
 
   export type ScoredAssetUncheckedCreateInput = {
-    id?: string
+    id?: number
     token_symbol: string
     issuer: string
     category: $Enums.CategoryType
@@ -6291,10 +6334,11 @@ export namespace Prisma {
     liquidity_tvl_usd: number
     risk_flags?: ScoredAssetCreaterisk_flagsInput | string[]
     description?: string | null
+    full_text?: string | null
+    url?: string | null
   }
 
   export type ScoredAssetUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
     token_symbol?: StringFieldUpdateOperationsInput | string
     issuer?: StringFieldUpdateOperationsInput | string
     category?: EnumCategoryTypeFieldUpdateOperationsInput | $Enums.CategoryType
@@ -6303,10 +6347,12 @@ export namespace Prisma {
     liquidity_tvl_usd?: FloatFieldUpdateOperationsInput | number
     risk_flags?: ScoredAssetUpdaterisk_flagsInput | string[]
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    full_text?: NullableStringFieldUpdateOperationsInput | string | null
+    url?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ScoredAssetUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: IntFieldUpdateOperationsInput | number
     token_symbol?: StringFieldUpdateOperationsInput | string
     issuer?: StringFieldUpdateOperationsInput | string
     category?: EnumCategoryTypeFieldUpdateOperationsInput | $Enums.CategoryType
@@ -6315,10 +6361,12 @@ export namespace Prisma {
     liquidity_tvl_usd?: FloatFieldUpdateOperationsInput | number
     risk_flags?: ScoredAssetUpdaterisk_flagsInput | string[]
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    full_text?: NullableStringFieldUpdateOperationsInput | string | null
+    url?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ScoredAssetCreateManyInput = {
-    id?: string
+    id?: number
     token_symbol: string
     issuer: string
     category: $Enums.CategoryType
@@ -6327,10 +6375,11 @@ export namespace Prisma {
     liquidity_tvl_usd: number
     risk_flags?: ScoredAssetCreaterisk_flagsInput | string[]
     description?: string | null
+    full_text?: string | null
+    url?: string | null
   }
 
   export type ScoredAssetUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
     token_symbol?: StringFieldUpdateOperationsInput | string
     issuer?: StringFieldUpdateOperationsInput | string
     category?: EnumCategoryTypeFieldUpdateOperationsInput | $Enums.CategoryType
@@ -6339,10 +6388,12 @@ export namespace Prisma {
     liquidity_tvl_usd?: FloatFieldUpdateOperationsInput | number
     risk_flags?: ScoredAssetUpdaterisk_flagsInput | string[]
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    full_text?: NullableStringFieldUpdateOperationsInput | string | null
+    url?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ScoredAssetUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: IntFieldUpdateOperationsInput | number
     token_symbol?: StringFieldUpdateOperationsInput | string
     issuer?: StringFieldUpdateOperationsInput | string
     category?: EnumCategoryTypeFieldUpdateOperationsInput | $Enums.CategoryType
@@ -6351,6 +6402,8 @@ export namespace Prisma {
     liquidity_tvl_usd?: FloatFieldUpdateOperationsInput | number
     risk_flags?: ScoredAssetUpdaterisk_flagsInput | string[]
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    full_text?: NullableStringFieldUpdateOperationsInput | string | null
+    url?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserCreateInput = {
@@ -6602,6 +6655,17 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -6673,9 +6737,12 @@ export namespace Prisma {
     liquidity_tvl_usd?: SortOrder
     risk_flags?: SortOrder
     description?: SortOrder
+    full_text?: SortOrder
+    url?: SortOrder
   }
 
   export type ScoredAssetAvgOrderByAggregateInput = {
+    id?: SortOrder
     total_score?: SortOrder
     liquidity_tvl_usd?: SortOrder
   }
@@ -6689,6 +6756,8 @@ export namespace Prisma {
     total_score?: SortOrder
     liquidity_tvl_usd?: SortOrder
     description?: SortOrder
+    full_text?: SortOrder
+    url?: SortOrder
   }
 
   export type ScoredAssetMinOrderByAggregateInput = {
@@ -6700,11 +6769,30 @@ export namespace Prisma {
     total_score?: SortOrder
     liquidity_tvl_usd?: SortOrder
     description?: SortOrder
+    full_text?: SortOrder
+    url?: SortOrder
   }
 
   export type ScoredAssetSumOrderByAggregateInput = {
+    id?: SortOrder
     total_score?: SortOrder
     liquidity_tvl_usd?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -6769,17 +6857,6 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
-  }
-
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -6828,22 +6905,6 @@ export namespace Prisma {
 
   export type UserSumOrderByAggregateInput = {
     id?: SortOrder
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -7079,6 +7140,14 @@ export namespace Prisma {
     set?: string | null
   }
 
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type SubscriptionCreateNestedManyWithoutUserInput = {
     create?: XOR<SubscriptionCreateWithoutUserInput, SubscriptionUncheckedCreateWithoutUserInput> | SubscriptionCreateWithoutUserInput[] | SubscriptionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SubscriptionCreateOrConnectWithoutUserInput | SubscriptionCreateOrConnectWithoutUserInput[]
@@ -7109,14 +7178,6 @@ export namespace Prisma {
     update?: SubscriptionUpdateWithWhereUniqueWithoutUserInput | SubscriptionUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: SubscriptionUpdateManyWithWhereWithoutUserInput | SubscriptionUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: SubscriptionScalarWhereInput | SubscriptionScalarWhereInput[]
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type SubscriptionUncheckedUpdateManyWithoutUserNestedInput = {
@@ -7219,6 +7280,17 @@ export namespace Prisma {
     update?: XOR<XOR<PlanUpdateToOneWithWhereWithoutSubscriptionsInput, PlanUpdateWithoutSubscriptionsInput>, PlanUncheckedUpdateWithoutSubscriptionsInput>
   }
 
+  export type NestedIntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -7265,6 +7337,22 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -7280,17 +7368,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
     _max?: NestedStringFilter<$PrismaModel>
-  }
-
-  export type NestedIntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type NestedEnumCategoryTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -7356,22 +7433,6 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
-  }
-
-  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
