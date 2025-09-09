@@ -52,12 +52,12 @@ async function main() {
     });
   }
 
-  console.log('Seeding scored assets...');
+  // console.log('Seeding scored assets...');
 
-  await prisma.scoredAsset.createMany({
-    data: mockScoredAssets,
-    skipDuplicates: true, // Skip if already exists
-  });
+  // await prisma.scoredAsset.createMany({
+  //   data: mockScoredAssets,
+  //   skipDuplicates: true, // Skip if already exists
+  // });
 
   console.log('Seeding completed.');
 }

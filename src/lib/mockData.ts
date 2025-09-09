@@ -2,7 +2,7 @@ import { ScoredAsset } from '@/types/scoredAssets';
 
 export const mockScoredAssets: ScoredAsset[] = [
   {
-    id: '1',
+    id: 1,
     token_symbol: 'BONDx',
     issuer: 'CrediCo',
     category: 'credit',
@@ -12,7 +12,7 @@ export const mockScoredAssets: ScoredAsset[] = [
     risk_flags: ['Upgradable contracts'],
   },
   {
-    id: '2',
+    id: 2,
     token_symbol: 'HOUSE',
     issuer: 'RealEstateDAO',
     category: 'real_estate',
@@ -22,7 +22,7 @@ export const mockScoredAssets: ScoredAsset[] = [
     risk_flags: ['Low liquidity'],
   },
   {
-    id: '3',
+    id: 3,
     token_symbol: 'GOLD',
     issuer: 'CommoditiesInc',
     category: 'commodities',
@@ -32,7 +32,7 @@ export const mockScoredAssets: ScoredAsset[] = [
     risk_flags: [],
   },
   {
-    id: '4',
+    id: 4,
     token_symbol: 'DEBT',
     issuer: 'DebtIssuer',
     category: 'credit',
@@ -42,7 +42,7 @@ export const mockScoredAssets: ScoredAsset[] = [
     risk_flags: ['High volatility', 'Regulatory concerns'],
   },
   {
-    id: '5',
+    id: 5,
     token_symbol: 'PROP',
     issuer: 'PropertyToken',
     category: 'real_estate',
