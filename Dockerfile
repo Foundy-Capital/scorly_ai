@@ -40,5 +40,8 @@ COPY --from=builder /app/package.json ./
 # Install PM2 globally
 RUN npm install --global pm2
 
+# Apply migrations
+RUN npx prisma migrate deploy
+
 # Start the application
 CMD ["pm2-runtime", "npm", "--", "start"]

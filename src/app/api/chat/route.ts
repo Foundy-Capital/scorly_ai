@@ -93,9 +93,9 @@ async function runChatWithTools(messages: ChatCompletionMessageParam[]) {
     const toolMessages: ChatCompletionMessageParam[] = [];
 
     for (const toolCall of toolCalls) {
-      const functionName = toolCall.function?.name || (toolCall as any).tool_call?.function?.name;
+      const functionName = (toolCall as any).tool_call?.function?.name;
       const functionToCall = availableFunctions[functionName];
-      const functionArgs = JSON.parse(toolCall.function?.arguments || (toolCall as any).tool_call?.function?.arguments);
+      const functionArgs = (toolCall as any).tool_call?.function?.arguments;
       let functionResponse;
 
       if (functionName === 'webCrawler') {

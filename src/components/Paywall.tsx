@@ -139,7 +139,7 @@ export function Paywall({ isOpen, onClose, onSuccess }: PaywallProps) {
 
               <div className="space-y-3 mb-6">
                 <div className="bg-gray-50 p-4 rounded-lg">
-                  <h3 className="font-semibold mb-2">What you'll get:</h3>
+                  <h3 className="font-semibold mb-2">What you will get:</h3>
                   <ul className="text-sm text-gray-600 space-y-1">
                     <li>• Access to all scored assets</li>
                     <li>• Advanced filtering options</li>
