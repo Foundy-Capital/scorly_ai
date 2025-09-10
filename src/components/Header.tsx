@@ -1,10 +1,9 @@
 'use client';
 
-import { Coins } from '@/components/ui/icons';
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useAccount } from 'wagmi';
 import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 
 // Dynamically import Account component to prevent hydration mismatch
 const Account = dynamic(() => import('@/components/Account').then(mod => ({ default: mod.Account })), {
@@ -30,7 +29,7 @@ export function Header() {
         <div className="flex items-center justify-between">
           <Link href="/">
             <div className="flex items-center gap-2">
-              <Coins className="w-8 h-8 text-brown-600" />
+              <img src="/logo.png" alt="Scorly Logo" className="w-8 h-8" />
               <div className="text-left">
                 <h1 className="text-xl font-bold text-gray-900">Scorly AI</h1>
                 <p className="text-sm text-gray-600">Score Any Tokenized Real-World Asset in Seconds</p>
