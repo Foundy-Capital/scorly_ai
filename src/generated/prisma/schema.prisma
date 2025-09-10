@@ -44,14 +44,14 @@ model User {
 
 model Plan {
   id          Int       @id @default(autoincrement())
-  name        String    @unique // 'monthly', 'quarterly', 'yearly'
-  displayName String // 'Monthly Access', 'Quarterly Access', 'Yearly Access'
-  duration    Int // days: 30, 90, 365
-  price       Float // regular price in USD
-  salePrice   Float? // discounted price (null if no sale)
-  saleStart   DateTime? // when sale begins
-  saleEnd     DateTime? // when sale ends
-  tier        String // 'scor_access_pass'
+  name        String    @unique
+  displayName String
+  duration    Int
+  price       Float
+  salePrice   Float?
+  saleStart   DateTime?
+  saleEnd     DateTime?
+  tier        String
   isActive    Boolean   @default(true)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
@@ -68,9 +68,9 @@ model Subscription {
   planId Int
   plan   Plan @relation(fields: [planId], references: [id])
 
-  token         String // 'USDT', 'USDC', 'SCOR'
-  status        String // 'active', 'expired', 'revoked'
-  purchasePrice Float // actual price paid (handles sale pricing)
+  token         String
+  status        String
+  purchasePrice Float
 
   startedAt DateTime
   expiresAt DateTime

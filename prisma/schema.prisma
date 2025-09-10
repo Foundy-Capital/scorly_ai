@@ -49,7 +49,7 @@ model Plan {
   duration    Int
   price       Float
   salePrice   Float?
-  saleStart   DateTime
+  saleStart   DateTime?
   saleEnd     DateTime?
   tier        String
   isActive    Boolean   @default(true)
