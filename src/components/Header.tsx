@@ -31,8 +31,8 @@ export function Header() {
           <Link href="/">
             <div className="flex items-center gap-2">
               <Coins className="w-8 h-8 text-brown-600" />
-              <div>
-                <h1 className="text-xl font-bold text-gray-900">Scorly</h1>
+              <div className="text-left">
+                <h1 className="text-xl font-bold text-gray-900">Scorly AI</h1>
                 <p className="text-sm text-gray-600">Score Any Tokenized Real-World Asset in Seconds</p>
               </div>
             </div>
@@ -42,11 +42,13 @@ export function Header() {
             <nav className="flex gap-4">
               {address && <Link href="/scores" className="text-gray-700 hover:text-gray-900">Scores</Link>}
               <Link href="/plans" className="text-gray-700 hover:text-gray-900">Plans</Link>
+              <Link href="/academy" className="text-gray-700 hover:text-gray-900">Academy</Link>
               <Link href="/docs/api/scores/assets" className="text-gray-700 hover:text-gray-900">API Docs</Link>
             </nav>
           ) : (
             <nav className="flex gap-4">
               <Link href="/plans" className="text-gray-700 hover:text-gray-900">Plans</Link>
+              <Link href="/academy" className="text-gray-700 hover:text-gray-900">Academy</Link>
               <Link href="/docs/api/scores/assets" className="text-gray-700 hover:text-gray-900">API Docs</Link>
             </nav>
           )}
