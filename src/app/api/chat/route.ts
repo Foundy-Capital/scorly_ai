@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
-import { ChatCompletionMessageParam } from 'openai/resources/index.mjs';
+import { ChatCompletionMessageFunctionToolCall, ChatCompletionMessageParam } from 'openai/resources/index.mjs';
 import { SYSTEM_PROMPT } from '@/config/prompts';
 import { postSearch } from '@/tools/search';
 import { webCrawler } from '@/tools/crawler';
@@ -93,9 +93,9 @@ async function runChatWithTools(messages: ChatCompletionMessageParam[]) {
     const toolMessages: ChatCompletionMessageParam[] = [];
 
     for (const toolCall of toolCalls) {
-      const functionName = (toolCall as any).tool_call?.function?.name;
+      const functionName = (toolCall as ChatCompletionMessageFunctionToolCall).function?.name;
       const functionToCall = availableFunctions[functionName];
-      const functionArgs = (toolCall as any).tool_call?.function?.arguments;
+      const functionArgs = JSON.parse((toolCall as ChatCompletionMessageFunctionToolCall).function?.arguments);
       let functionResponse;
 
       if (functionName === 'webCrawler') {
