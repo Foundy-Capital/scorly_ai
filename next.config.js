@@ -10,7 +10,9 @@ const nextConfig = {
     return config;
   },
   env: {
-    WCPID: process.env.WCPID
+    WCPID: process.env.WCPID,
+    RECIEVER_ADDRESS: process.env.RECEIVER_ADDRESS,
+    BSC_RPC_URL: process.env.BSC_RPC_URL
   }
 }
 

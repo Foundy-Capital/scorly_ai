@@ -12,7 +12,7 @@ export default function Course1Page() {
         <ul className="list-disc list-inside text-gray-600 space-y-1">
           <li>Understand what tokenized RWAs are and why they matter.</li>
           <li>Evaluate the main legal, financial, and technical risks of RWA tokens.</li>
-          <li>Apply scoring methodologies (like Scorly's model) to analyze projects.</li>
+          <li>Apply scoring methodologies (like Scorly`s model) to analyze projects.</li>
           <li>Compare RWA projects using quantitative & qualitative data.</li>
           <li>Prepare a simple due diligence report for an RWA project.</li>
         </ul>
