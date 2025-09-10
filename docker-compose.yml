@@ -35,8 +35,11 @@ services:
     container_name: scorly_app
     ports:
       - ${APP_PORT_EXPOSE}:3000
-    command: pm2-runtime npm -- start
+    command: sh -c "npx prisma migrate deploy && npm run seed && pm2-runtime npm -- start"
     env_file:
       - .env
     networks:
       - scorly-network
+    depends_on:
+      postgres:
+        condition: service_healthy

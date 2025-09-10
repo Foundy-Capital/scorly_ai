@@ -1,7 +1,10 @@
 # Build stage
-FROM node:22 AS builder
+FROM node:22-alpine AS builder
 
 WORKDIR /app
+
+# Install Python and build tools for native dependencies
+RUN apk add --no-cache python3 build-base
 
 # Copy package files
 COPY package*.json ./
@@ -19,11 +22,14 @@ RUN npm run generate
 RUN npm run build
 
 # Production stage
-FROM node:22 AS runner
+FROM node:22-alpine AS runner
 
 WORKDIR /app
 
 ENV NODE_ENV=production
+
+# Install Python and build tools for native dependencies
+RUN apk add --no-cache python3 build-base
 
 # Copy package files
 COPY package*.json ./
@@ -36,12 +42,11 @@ COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/src/generated ./src/generated
 COPY --from=builder /app/package.json ./
+COPY --from=builder /app/prisma/ ./prisma
 
 # Install PM2 globally
 RUN npm install --global pm2
 
-# Apply migrations
-RUN npx prisma migrate deploy
 
 # Start the application
 CMD ["pm2-runtime", "npm", "--", "start"]
