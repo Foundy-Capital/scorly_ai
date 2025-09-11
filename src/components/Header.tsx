@@ -42,12 +42,14 @@ export function Header() {
               {address && <Link href="/scores" className="text-gray-700 hover:text-gray-900">Scores</Link>}
               <Link href="/plans" className="text-gray-700 hover:text-gray-900">Plans</Link>
               <Link href="/academy" className="text-gray-700 hover:text-gray-900">Academy</Link>
+              <Link href="/staking-hub" className="text-gray-700 hover:text-gray-900">Staking Hub</Link>
               <Link href="/docs/api/scores/assets" className="text-gray-700 hover:text-gray-900">API Docs</Link>
             </nav>
           ) : (
             <nav className="flex gap-4">
               <Link href="/plans" className="text-gray-700 hover:text-gray-900">Plans</Link>
               <Link href="/academy" className="text-gray-700 hover:text-gray-900">Academy</Link>
+              <Link href="/staking-hub" className="text-gray-700 hover:text-gray-900">Staking Hub</Link>
               <Link href="/docs/api/scores/assets" className="text-gray-700 hover:text-gray-900">API Docs</Link>
             </nav>
           )}
