@@ -9,6 +9,7 @@ export function Footer() {
           <p>&copy; 2025 Scorly AI. All rights reserved.</p>
           <div className="flex gap-6">
             <Link href="/academy" className="text-gray-600 hover:text-gray-900">Academy</Link>
+            <Link href="/staking-hub" className="text-gray-600 hover:text-gray-900">Staking Hub</Link>
             <Link href="/privacy" className="text-gray-600 hover:text-gray-900">Privacy Policy</Link>
             <Link href="/terms" className="text-gray-600 hover:text-gray-900">Terms of Use</Link>
           </div>
